@@ -1,0 +1,168 @@
+# Development Plan & Task Tracker
+## Employee / Branch Management System
+
+Reference: see [PRD.md](PRD.md) for full requirements.
+
+This document breaks the MVP into sequential milestones. Each milestone should be merged to `master` (or a release branch) only once its tasks are checked off and the app builds/runs without errors. Check off tasks (`[x]`) as they are completed; add notes inline where useful (e.g., decisions, deviations from PRD).
+
+**Status legend:** `[ ]` Not started · `[~]` In progress · `[x]` Done
+
+---
+
+## Milestone 0 — Project Setup & Infrastructure
+
+Goal: a running, deployable skeleton with no business logic yet.
+
+- [ ] Scaffold React + Vite + TypeScript app (`npm create vite@latest . -- --template react-ts`)
+- [ ] Install and configure ESLint + Prettier
+- [ ] Set up folder structure (`src/features`, `src/components`, `src/lib`, `src/pages`, `src/types`)
+- [ ] Install UI library (MUI or Chakra UI) with RTL plugin
+- [ ] Install i18next + react-i18next, configure `he`/`en` locale files, RTL/LTR direction switch
+- [ ] Create Supabase project (dev environment)
+- [ ] Install `@supabase/supabase-js`, set up Supabase client singleton with env vars (`.env.local`, never committed)
+- [ ] Configure GitHub repo: branch protection on `master`, PR template
+- [ ] Set up Vercel project linked to GitHub repo (auto-deploy `master`, preview deploys on PR)
+- [ ] Add basic CI (lint + typecheck + build) via GitHub Actions or Vercel checks
+- [ ] Commit: "Scaffold Vite + React + TS project with base tooling"
+
+**Exit criteria:** `npm run dev` runs locally, `npm run build` succeeds, Vercel preview deploy works, Supabase client connects.
+
+---
+
+## Milestone 1 — Database Schema & Auth Foundation
+
+Goal: schema, RLS policies, and login working end-to-end.
+
+- [ ] Design and create core tables in Supabase: `organizations`, `branches`, `employees`, `salary_profiles`
+- [ ] Create `profiles` table linked to `auth.users` (role: admin / branch_manager / employee, linked employee_id)
+- [ ] Write RLS policies for `branches` and `employees` (admin: full access; branch_manager: own branch only; employee: self only)
+- [ ] Set up Supabase Auth (email/password) — sign in / sign out flows in the frontend
+- [ ] Build route guard / auth context (`useAuth` hook, protected routes by role)
+- [ ] Build basic login page (i18n-aware, RTL/LTR)
+- [ ] Seed script: create one admin user + sample branch for local dev/testing
+- [ ] Commit: "Add core schema, RLS policies, and authentication"
+
+**Exit criteria:** A seeded admin user can log in; RLS verified manually (a branch_manager test user cannot query another branch's data via the Supabase client).
+
+---
+
+## Milestone 2 — Branch & Employee Management (CRUD)
+
+Goal: Admin/Branch Manager can manage branches and employees through the UI.
+
+- [ ] Branch list page (Admin) — table with create/edit/deactivate
+- [ ] Branch create/edit form (name, address, phone, manager assignment)
+- [ ] Employee list page — filterable by branch, role, active status
+- [ ] Employee create/edit form (personal info, start/end date, role, primary branch)
+- [ ] Multi-branch assignment UI (`EmployeeBranchAssignment`) — assign employee to additional branches
+- [ ] Employee self-service profile page (read-only personal info + pay summary placeholder)
+- [ ] Soft-deactivation flow (set `end_date`, hide from active lists, retain historical data)
+- [ ] RLS coverage tests for branch/employee CRUD (manual or scripted)
+- [ ] Commit: "Add branch and employee CRUD management"
+
+**Exit criteria:** Admin can create a branch, assign a manager, create employees, and assign them to branches; Branch Manager sees only their branch's employees.
+
+---
+
+## Milestone 3 — Attendance & Shift Scheduling
+
+Goal: employees can clock in/out, managers can build schedules, attendance approval workflow works.
+
+- [ ] `attendance_records` table + RLS (employee: own records; branch_manager: own branch; admin: all)
+- [ ] Clock-in / clock-out UI (button + server-side timestamp via Supabase RPC/Edge Function, optional geolocation capture with consent prompt)
+- [ ] Manual attendance entry form (Branch Manager) with mandatory note, status = `pending`
+- [ ] Attendance approval queue page (Branch Manager/Admin) — approve/reject pending entries
+- [ ] `shifts` table + RLS (branch-scoped)
+- [ ] Shift scheduling UI — weekly/monthly calendar view per branch, create/assign/publish shifts
+- [ ] Employee "My Shifts" read-only view
+- [ ] Conflict detection: flag overlapping shifts for the same employee across branches
+- [ ] Commit: "Add attendance tracking, approval workflow, and shift scheduling"
+
+**Exit criteria:** An employee can clock in/out; a manager can approve it; a manager can build and publish a weekly schedule; an employee sees their upcoming shifts.
+
+---
+
+## Milestone 4 — Salary Profiles & Payroll Engine
+
+Goal: automatic, legally-compliant overtime calculation and a working monthly payroll run.
+
+- [ ] `salary_profiles` table (versioned by `effective_from`/`effective_to`) + RLS (admin write, branch_manager read-only, employee: own only)
+- [ ] Salary profile management UI (Admin) — set pay type, base rate, overtime eligibility
+- [ ] `salary_adjustments` table (bonus/deduction/addition) + UI for Admin/Branch Manager to add entries
+- [ ] Configurable overtime policy table (daily/weekly thresholds, 125%/150% rates, weekend/holiday rate) — Admin-editable settings page
+- [ ] Supabase Edge Function: overtime calculation logic (regular vs. 125% vs. 150% vs. weekend/holiday hours) operating on approved attendance records
+- [ ] Supabase Edge Function: monthly payroll aggregation (`payroll_runs` + `payroll_lines`) combining hours + adjustments
+- [ ] Payroll run trigger UI (Admin) — select month/branch, run calculation, review draft results
+- [ ] Payroll finalize/lock flow (status `draft` → `finalized`, blocks further edits unless reopened with audit note)
+- [ ] PDF generation for per-employee salary summary (client-side or Edge Function), stored in Supabase Storage
+- [ ] Employee view: "My Pay" page showing current/past salary summaries (PDF download)
+- [ ] Unit tests for overtime calculation logic (edge cases: exactly 8h, 9-10h, >10h, Shabbat/holiday work)
+- [ ] Commit: "Add salary profiles, overtime engine, and monthly payroll runs"
+
+**Exit criteria:** Running payroll for a test branch with seeded attendance data produces correct regular/overtime split and a downloadable PDF summary per employee.
+
+---
+
+## Milestone 5 — Documents
+
+Goal: secure document upload/storage tied to employees.
+
+- [ ] Create private Supabase Storage bucket for employee documents
+- [ ] `documents` table + RLS mirroring access rules (admin: all; branch_manager: own branch; employee: own only)
+- [ ] Document upload UI on employee profile (type: contract/id_copy/receipt/other)
+- [ ] Document list/download UI with signed URL generation
+- [ ] Commit: "Add employee document upload and storage"
+
+**Exit criteria:** A contract uploaded for an employee is visible only to Admin, that employee's Branch Manager, and the employee themselves.
+
+---
+
+## Milestone 6 — Dashboards & Reports
+
+Goal: actionable visibility for managers and admin.
+
+- [ ] Branch dashboard: headcount, total hours (regular/overtime split), labor cost, pending approvals count
+- [ ] Organization dashboard (Admin only): cross-branch cost comparison, month-over-month trend chart
+- [ ] Employee list with filters (branch, role, active status) reused across Admin/Branch Manager views
+- [ ] Commit: "Add branch and organization dashboards"
+
+**Exit criteria:** Admin can compare labor cost across all branches for the current month; a Branch Manager sees their own branch's live attendance/cost snapshot.
+
+---
+
+## Milestone 7 — Polish, i18n Completeness & QA
+
+Goal: production-readiness pass.
+
+- [ ] Full i18n audit — no hardcoded strings, verify Hebrew RTL layout on every screen
+- [ ] Responsive design pass (mobile clock-in flow is priority)
+- [ ] Empty states, loading states, and error handling audit across all pages
+- [ ] Accessibility pass (form labels, keyboard navigation, contrast)
+- [ ] Security review: re-verify RLS policies against the role matrix in PRD §2
+- [ ] Manual end-to-end test pass through all MVP user flows (Admin, Branch Manager, Employee)
+- [ ] Write a minimal README (setup, env vars, deploy instructions)
+- [ ] Commit: "Polish UI, complete i18n coverage, and finalize QA pass"
+
+**Exit criteria:** All PRD §4 functional requirements demonstrably work end-to-end; no untranslated strings; RLS verified against the full role matrix.
+
+---
+
+## Milestone 8 — MVP Launch
+
+- [ ] Final production Supabase project setup (separate from dev) with migrations applied
+- [ ] Production environment variables configured in Vercel
+- [ ] Create initial production Admin user and at least one real branch
+- [ ] Smoke test in production
+- [ ] Tag release `v1.0.0`
+- [ ] Commit/tag: "Release v1.0.0 — MVP launch"
+
+---
+
+## Backlog (Post-MVP — see PRD §7.2)
+
+- [ ] Multi-tenant SaaS support
+- [ ] CSV/Excel payroll export
+- [ ] Integration with official Israeli payroll/tax reporting systems
+- [ ] PWA / push notifications
+- [ ] Auto-suggested shift scheduling
+- [ ] Split-shift cost allocation reporting for multi-branch employees
