@@ -1,0 +1,16 @@
+{
+  "app": {
+    "title": "Employee & Branch Management"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "branches": "Branches",
+    "employees": "Employees",
+    "attendance": "Attendance",
+    "shifts": "Shifts",
+    "payroll": "Payroll",
+    "documents": "Documents",
+    "login": "Log in",
+    "logout": "Log out"
+  }
+}

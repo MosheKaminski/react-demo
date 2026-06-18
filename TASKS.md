@@ -13,17 +13,17 @@ This document breaks the MVP into sequential milestones. Each milestone should b
 
 Goal: a running, deployable skeleton with no business logic yet.
 
-- [ ] Scaffold React + Vite + TypeScript app (`npm create vite@latest . -- --template react-ts`)
-- [ ] Install and configure ESLint + Prettier
-- [ ] Set up folder structure (`src/features`, `src/components`, `src/lib`, `src/pages`, `src/types`)
-- [ ] Install UI library (MUI or Chakra UI) with RTL plugin
-- [ ] Install i18next + react-i18next, configure `he`/`en` locale files, RTL/LTR direction switch
-- [ ] Create Supabase project (dev environment)
-- [ ] Install `@supabase/supabase-js`, set up Supabase client singleton with env vars (`.env.local`, never committed)
-- [ ] Configure GitHub repo: branch protection on `master`, PR template
-- [ ] Set up Vercel project linked to GitHub repo (auto-deploy `master`, preview deploys on PR)
-- [ ] Add basic CI (lint + typecheck + build) via GitHub Actions or Vercel checks
-- [ ] Commit: "Scaffold Vite + React + TS project with base tooling"
+- [x] Scaffold React + Vite + TypeScript app (`npm create vite@latest . -- --template react-ts`)
+- [x] Install and configure ESLint + Prettier
+- [x] Set up folder structure (`src/features`, `src/components`, `src/lib`, `src/pages`, `src/types`)
+- [x] Install UI library (MUI or Chakra UI) with RTL plugin — used MUI + `stylis-plugin-rtl`, direction-aware theme/cache in `App.tsx`
+- [x] Install i18next + react-i18next, configure `he`/`en` locale files, RTL/LTR direction switch
+- [x] Create Supabase project (dev environment) — `react-demo-dev` (ref `chwdwpowwwmxpgqeddhc`, region `eu-central-1`)
+- [x] Install `@supabase/supabase-js`, set up Supabase client singleton with env vars (`.env.local`, never committed)
+- [x] Configure GitHub repo: PR template added; branch protection on `master` pending first CI run on this push
+- [x] Set up Vercel project linked to GitHub repo — project created and env vars set; GitHub auto-deploy connection requires a one-time manual approval in the Vercel dashboard (CLI can't complete OAuth app installation non-interactively)
+- [x] Add basic CI (lint + typecheck + build) via GitHub Actions
+- [x] Commit: "Scaffold Vite + React + TS project with base tooling"
 
 **Exit criteria:** `npm run dev` runs locally, `npm run build` succeeds, Vercel preview deploy works, Supabase client connects.
 

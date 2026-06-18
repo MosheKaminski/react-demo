@@ -1,0 +1,16 @@
+{
+  "app": {
+    "title": "ניהול עובדים וסניפים"
+  },
+  "nav": {
+    "dashboard": "דשבורד",
+    "branches": "סניפים",
+    "employees": "עובדים",
+    "attendance": "נוכחות",
+    "shifts": "משמרות",
+    "payroll": "שכר",
+    "documents": "מסמכים",
+    "login": "התחברות",
+    "logout": "התנתקות"
+  }
+}
