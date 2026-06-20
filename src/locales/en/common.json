@@ -74,7 +74,7 @@
     "title": "My profile",
     "noEmployeeRecord": "No employee record is linked to your account yet. Contact your administrator.",
     "paySummary": "Pay summary",
-    "paySummaryPlaceholder": "Pay summaries will appear here once payroll is set up (Milestone 4)."
+    "noPaySummaries": "No pay summaries yet."
   },
   "attendance": {
     "title": "Attendance",
@@ -128,6 +128,58 @@
       "published": "Published",
       "completed": "Completed",
       "cancelled": "Cancelled"
+    }
+  },
+  "payroll": {
+    "title": "Payroll",
+    "salaryProfile": "Salary profile",
+    "payType": "Pay type",
+    "hourly": "Hourly",
+    "monthly": "Monthly",
+    "baseRate": "Base rate",
+    "weeklyHoursBaseline": "Weekly hours baseline",
+    "overtimeEligible": "Eligible for overtime",
+    "saveSalaryProfile": "Save salary profile",
+    "adjustments": "Bonuses / deductions",
+    "type": "Type",
+    "amount": "Amount",
+    "effectiveMonth": "Effective month",
+    "description": "Description",
+    "adjustmentType": {
+      "bonus": "Bonus",
+      "deduction": "Deduction",
+      "addition": "Addition"
+    },
+    "overtimePolicy": "Overtime policy",
+    "dailyRegularHours": "Daily regular hours",
+    "daily125Hours": "Hours at 125%",
+    "rate125": "125% rate multiplier",
+    "rate150": "150% rate multiplier",
+    "weekendHolidayRate": "Weekend/holiday rate multiplier",
+    "savePolicy": "Save policy",
+    "runPayroll": "Run payroll",
+    "year": "Year",
+    "month": "Month",
+    "allBranches": "All branches",
+    "regularHours": "Regular hours",
+    "overtime125Hours": "Overtime (125%)",
+    "overtime150Hours": "Overtime (150%)",
+    "weekendHolidayHours": "Weekend/holiday hours",
+    "grossBase": "Gross base",
+    "grossOvertime": "Gross overtime",
+    "adjustmentsTotal": "Adjustments",
+    "grossTotal": "Gross total",
+    "finalize": "Finalize",
+    "reopen": "Reopen",
+    "reopenPrompt": "Reason for reopening this payroll run (audit note)",
+    "generatePdf": "Generate PDF",
+    "downloadPdf": "Download PDF",
+    "pastRuns": "Past payroll runs",
+    "noPastRuns": "No payroll runs yet.",
+    "disclaimer": "Internal salary summary only — not an official, legally-binding payslip.",
+    "runStatus": {
+      "draft": "Draft",
+      "finalized": "Finalized"
     }
   }
 }

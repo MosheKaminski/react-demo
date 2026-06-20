@@ -90,20 +90,22 @@ Goal: employees can clock in/out, managers can build schedules, attendance appro
 
 Goal: automatic, legally-compliant overtime calculation and a working monthly payroll run.
 
-- [ ] `salary_profiles` table (versioned by `effective_from`/`effective_to`) + RLS (admin write, branch_manager read-only, employee: own only)
-- [ ] Salary profile management UI (Admin) — set pay type, base rate, overtime eligibility
-- [ ] `salary_adjustments` table (bonus/deduction/addition) + UI for Admin/Branch Manager to add entries
-- [ ] Configurable overtime policy table (daily/weekly thresholds, 125%/150% rates, weekend/holiday rate) — Admin-editable settings page
-- [ ] Supabase Edge Function: overtime calculation logic (regular vs. 125% vs. 150% vs. weekend/holiday hours) operating on approved attendance records
-- [ ] Supabase Edge Function: monthly payroll aggregation (`payroll_runs` + `payroll_lines`) combining hours + adjustments
-- [ ] Payroll run trigger UI (Admin) — select month/branch, run calculation, review draft results
-- [ ] Payroll finalize/lock flow (status `draft` → `finalized`, blocks further edits unless reopened with audit note)
-- [ ] PDF generation for per-employee salary summary (client-side or Edge Function), stored in Supabase Storage
-- [ ] Employee view: "My Pay" page showing current/past salary summaries (PDF download)
-- [ ] Unit tests for overtime calculation logic (edge cases: exactly 8h, 9-10h, >10h, Shabbat/holiday work)
-- [ ] Commit: "Add salary profiles, overtime engine, and monthly payroll runs"
+- [x] `salary_profiles` table (versioned by `effective_from`/`effective_to`) + RLS (admin write, branch_manager read-only, employee: own only) — table + RLS already existed from Milestone 1 and matched this requirement exactly; no migration changes needed
+- [x] Salary profile management UI (Admin) — set pay type, base rate, overtime eligibility — embedded as a "Salary" section in the employee edit dialog (`EmployeeSalarySection`); saving versions the profile (closes the prior open-ended row, inserts a new one from today) rather than mutating history
+- [x] `salary_adjustments` table (bonus/deduction/addition) + UI for Admin/Branch Manager to add entries — same section, scoped by RLS to the manager's branch
+- [x] Configurable overtime policy table (daily/weekly thresholds, 125%/150% rates, weekend/holiday rate) — Admin-editable settings page — single-row `overtime_policies` table, edited via `OvertimePolicySettings` at the top of the Payroll page
+- [x] Supabase Edge Function: overtime calculation logic (regular vs. 125% vs. 150% vs. weekend/holiday hours) operating on approved attendance records — `calculate-payroll` deployed and verified live (Docker isn't available in this environment, but `supabase functions deploy` bundles/deploys remotely without it)
+- [x] Supabase Edge Function: monthly payroll aggregation (`payroll_runs` + `payroll_lines`) combining hours + adjustments — same function; admin-only (checks caller's role via their own JWT before using the service-role key for cross-employee writes)
+- [x] Payroll run trigger UI (Admin) — select month/branch, run calculation, review draft results
+- [x] Payroll finalize/lock flow (status `draft` → `finalized`, blocks further edits unless reopened with audit note) — reopening prompts for a note stored in `payroll_runs.audit_note`
+- [x] PDF generation for per-employee salary summary (client-side or Edge Function), stored in Supabase Storage — client-side via `@react-pdf/renderer`, uploaded to the private `payroll-pdfs` bucket (path `payroll/<employee_id>/<run_id>.pdf`, RLS-scoped like other employee data); PDF explicitly labeled "not an official payslip" per PRD §8 risk #1
+- [x] Employee view: "My Pay" page showing current/past salary summaries (PDF download) — added to the existing My Profile page rather than a separate route; only shows lines from **finalized** runs (draft runs are admin-only until closed)
+- [x] Unit tests for overtime calculation logic (edge cases: exactly 8h, 9-10h, >10h, Shabbat/holiday work) — 10 Vitest tests in `supabase/functions/calculate-payroll/payroll-logic.test.ts`, covering all the listed edge cases plus aggregation and pay calculation; the calculation module has zero Deno/Node-specific imports so the same file is deployed to the Edge Function and unit-tested from Node without duplication
+- [x] Commit: "Add salary profiles, overtime engine, and monthly payroll runs"
 
-**Exit criteria:** Running payroll for a test branch with seeded attendance data produces correct regular/overtime split and a downloadable PDF summary per employee.
+**Known simplifications (documented in code comments):** "Weekend/holiday" detection is Saturday-only — no Jewish holiday calendar integration (PRD §8 open question #2). Each attendance session is treated as one "day" for the daily overtime threshold, so an employee clocking in/out more than once on the same calendar day gets the threshold applied per-session, not per-day.
+
+**Exit criteria:** Running payroll for a test branch with seeded attendance data produces correct regular/overtime split and a downloadable PDF summary per employee. ✅ Verified end-to-end: seeded an employee with mixed attendance (exactly 8h, 9.5h, 11h, and a Saturday shift) plus a bonus and a deduction; ran payroll via the real Edge Function and got the exact expected `gross_total` (2093.75); generated and downloaded the PDF; finalized the run; confirmed the employee sees it on their My Profile page (and only after finalization). `npm run verify-rls` extended to 22/22 checks, including salary-profile/adjustment/overtime-policy/payroll-run write scoping for all three roles.
 
 ---
 

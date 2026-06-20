@@ -40,6 +40,11 @@ export function AppLayout({ children, language, onToggleLanguage }: AppLayoutPro
           <Button component={RouterLink} to="/shifts">
             {t('nav.shifts')}
           </Button>
+          {profile?.role === 'admin' && (
+            <Button component={RouterLink} to="/payroll">
+              {t('nav.payroll')}
+            </Button>
+          )}
           <Button component={RouterLink} to="/me">
             {t('nav.myProfile')}
           </Button>

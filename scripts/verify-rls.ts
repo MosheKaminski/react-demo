@@ -18,6 +18,8 @@ config({ path: '.env.local' });
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const anonKey = process.env.VITE_SUPABASE_ANON_KEY;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const adminEmail = process.env.SEED_ADMIN_EMAIL;
+const adminPassword = process.env.SEED_ADMIN_PASSWORD;
 if (!supabaseUrl || !anonKey || !serviceRoleKey) {
   throw new Error(
     'Missing VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, or SUPABASE_SERVICE_ROLE_KEY in .env.local',
@@ -237,6 +239,94 @@ async function main() {
     status: 'draft',
   });
   check('employee cannot create shifts', !!employeeShiftWriteError);
+
+  // --- Milestone 4: salary profiles, adjustments, overtime policy, payroll ---
+  // Ensure a salary_profile row exists to attempt updating (service role),
+  // since a blocked UPDATE matches 0 rows rather than raising an error -
+  // .select().single() is required to surface the block as an error, but
+  // only distinguishes "blocked" from "no such row" if a row really exists.
+  const { data: tempSalaryProfile } = await admin
+    .from('salary_profiles')
+    .insert({ employee_id: managerEmployeeRow.id, pay_type: 'hourly', base_rate: 50 })
+    .select('id')
+    .single();
+  const { error: managerSalaryProfileWriteError } = await manager
+    .from('salary_profiles')
+    .update({ base_rate: 999 })
+    .eq('employee_id', managerEmployeeRow.id)
+    .select()
+    .single();
+  check(
+    'branch_manager cannot write salary_profiles (read-only per PRD §2.1)',
+    !!managerSalaryProfileWriteError,
+  );
+  if (tempSalaryProfile) {
+    await admin.from('salary_profiles').delete().eq('id', tempSalaryProfile.id);
+  }
+
+  const { error: managerAdjustmentForeignBranchError } = await manager
+    .from('salary_adjustments')
+    .insert({
+      employee_id: employeeEmployeeRow.id,
+      type: 'bonus',
+      amount: 10,
+      effective_month: '2026-01-01',
+    });
+  check(
+    `branch_manager cannot create a salary_adjustment in "${BRANCH_B_NAME}"`,
+    !!managerAdjustmentForeignBranchError,
+  );
+
+  const { data: managerOwnAdjustment, error: managerAdjustmentOwnBranchError } = await manager
+    .from('salary_adjustments')
+    .insert({
+      employee_id: managerEmployeeRow.id,
+      type: 'bonus',
+      amount: 10,
+      effective_month: '2026-01-01',
+    })
+    .select('id')
+    .single();
+  check(
+    `branch_manager can create a salary_adjustment in "${BRANCH_A_NAME}"`,
+    !managerAdjustmentOwnBranchError && !!managerOwnAdjustment,
+  );
+  if (managerOwnAdjustment) {
+    await admin.from('salary_adjustments').delete().eq('id', managerOwnAdjustment.id);
+  }
+
+  const { error: employeeAdjustmentError } = await employee.from('salary_adjustments').insert({
+    employee_id: employeeEmployeeRow.id,
+    type: 'bonus',
+    amount: 10,
+    effective_month: '2026-01-01',
+  });
+  check('employee cannot create salary_adjustments', !!employeeAdjustmentError);
+
+  const { data: policyRow } = await admin.from('overtime_policies').select('id').limit(1).single();
+  const { error: managerPolicyWriteError } = await manager
+    .from('overtime_policies')
+    .update({ rate_125: 9 })
+    .eq('id', policyRow!.id)
+    .select()
+    .single();
+  check('branch_manager cannot write overtime_policies', !!managerPolicyWriteError);
+
+  const { error: managerPayrollRunWriteError } = await manager.from('payroll_runs').insert({
+    period_year: 2026,
+    period_month: 1,
+    branch_id: branchA.id,
+  });
+  check('branch_manager cannot create payroll_runs (admin/Edge Function only)', !!managerPayrollRunWriteError);
+
+  if (adminEmail && adminPassword) {
+    const adminAnon = await signInAs(adminEmail, adminPassword);
+    const { error: adminPolicyWriteError } = await adminAnon
+      .from('overtime_policies')
+      .update({ rate_125: 1.25 })
+      .eq('id', policyRow!.id);
+    check('admin can write overtime_policies', !adminPolicyWriteError);
+  }
 
   console.log(failures === 0 ? '\nAll RLS checks passed.' : `\n${failures} RLS check(s) failed.`);
   process.exit(failures === 0 ? 0 : 1);

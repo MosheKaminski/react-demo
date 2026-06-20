@@ -97,4 +97,86 @@ export interface ShiftInput {
   status: ShiftStatus;
 }
 
+export type PayType = 'hourly' | 'monthly';
+
+export interface SalaryProfile {
+  id: string;
+  employee_id: string;
+  pay_type: PayType;
+  base_rate: number;
+  weekly_hours_baseline: number | null;
+  overtime_eligible: boolean;
+  effective_from: string;
+  effective_to: string | null;
+  created_at: string;
+}
+
+export interface SalaryProfileInput {
+  pay_type: PayType;
+  base_rate: number;
+  weekly_hours_baseline?: number | null;
+  overtime_eligible: boolean;
+}
+
+export type AdjustmentType = 'bonus' | 'deduction' | 'addition';
+
+export interface SalaryAdjustment {
+  id: string;
+  employee_id: string;
+  type: AdjustmentType;
+  amount: number;
+  description: string | null;
+  effective_month: string;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface SalaryAdjustmentInput {
+  employee_id: string;
+  type: AdjustmentType;
+  amount: number;
+  description?: string | null;
+  effective_month: string;
+}
+
+export interface OvertimePolicy {
+  id: string;
+  daily_regular_hours: number;
+  daily_125_hours: number;
+  rate_125: number;
+  rate_150: number;
+  weekend_holiday_rate: number;
+  updated_at: string;
+}
+
+export type PayrollRunStatus = 'draft' | 'finalized';
+
+export interface PayrollRun {
+  id: string;
+  period_year: number;
+  period_month: number;
+  branch_id: string | null;
+  status: PayrollRunStatus;
+  generated_by: string | null;
+  generated_at: string;
+  finalized_at: string | null;
+  audit_note: string | null;
+}
+
+export interface PayrollLine {
+  id: string;
+  payroll_run_id: string;
+  employee_id: string;
+  regular_hours: number;
+  overtime_125_hours: number;
+  overtime_150_hours: number;
+  weekend_holiday_hours: number;
+  gross_base: number;
+  gross_overtime: number;
+  adjustments_total: number;
+  gross_total: number;
+  pdf_path: string | null;
+  created_at: string;
+}
+
 export type { Role };

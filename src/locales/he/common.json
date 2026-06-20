@@ -74,7 +74,7 @@
     "title": "הפרופיל שלי",
     "noEmployeeRecord": "אין עדיין רשומת עובד המקושרת לחשבון שלך. פנה למנהל המערכת.",
     "paySummary": "סיכום שכר",
-    "paySummaryPlaceholder": "סיכומי שכר יופיעו כאן לאחר הקמת מנגנון השכר (Milestone 4)."
+    "noPaySummaries": "אין עדיין סיכומי שכר."
   },
   "attendance": {
     "title": "נוכחות",
@@ -128,6 +128,58 @@
       "published": "מפורסם",
       "completed": "הושלם",
       "cancelled": "בוטל"
+    }
+  },
+  "payroll": {
+    "title": "שכר",
+    "salaryProfile": "פרופיל שכר",
+    "payType": "סוג שכר",
+    "hourly": "שעתי",
+    "monthly": "חודשי",
+    "baseRate": "תעריף בסיס",
+    "weeklyHoursBaseline": "בסיס שעות שבועי",
+    "overtimeEligible": "זכאי לשעות נוספות",
+    "saveSalaryProfile": "שמירת פרופיל שכר",
+    "adjustments": "בונוסים / ניכויים",
+    "type": "סוג",
+    "amount": "סכום",
+    "effectiveMonth": "חודש תוקף",
+    "description": "תיאור",
+    "adjustmentType": {
+      "bonus": "בונוס",
+      "deduction": "ניכוי",
+      "addition": "תוספת"
+    },
+    "overtimePolicy": "מדיניות שעות נוספות",
+    "dailyRegularHours": "שעות רגילות ביום",
+    "daily125Hours": "שעות ב-125%",
+    "rate125": "מכפיל תעריף 125%",
+    "rate150": "מכפיל תעריף 150%",
+    "weekendHolidayRate": "מכפיל תעריף שבת/חג",
+    "savePolicy": "שמירת מדיניות",
+    "runPayroll": "הרצת שכר",
+    "year": "שנה",
+    "month": "חודש",
+    "allBranches": "כל הסניפים",
+    "regularHours": "שעות רגילות",
+    "overtime125Hours": "שעות נוספות (125%)",
+    "overtime150Hours": "שעות נוספות (150%)",
+    "weekendHolidayHours": "שעות שבת/חג",
+    "grossBase": "ברוטו בסיס",
+    "grossOvertime": "ברוטו שעות נוספות",
+    "adjustmentsTotal": "תוספות/ניכויים",
+    "grossTotal": "סה\"כ ברוטו",
+    "finalize": "סגירה",
+    "reopen": "פתיחה מחדש",
+    "reopenPrompt": "סיבת פתיחה מחדש של הרצת השכר (הערת ביקורת)",
+    "generatePdf": "הפקת PDF",
+    "downloadPdf": "הורדת PDF",
+    "pastRuns": "הרצות שכר קודמות",
+    "noPastRuns": "אין עדיין הרצות שכר.",
+    "disclaimer": "סיכום שכר פנימי בלבד — לא תלוש שכר רשמי המחויב מבחינה משפטית.",
+    "runStatus": {
+      "draft": "טיוטה",
+      "finalized": "סגור"
     }
   }
 }

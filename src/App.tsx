@@ -18,6 +18,7 @@ import { EmployeesPage } from './pages/EmployeesPage';
 import { MyProfilePage } from './pages/MyProfilePage';
 import { AttendancePage } from './pages/AttendancePage';
 import { ShiftsPage } from './pages/ShiftsPage';
+import { PayrollPage } from './pages/PayrollPage';
 
 function App() {
   const { i18n } = useTranslation();
@@ -103,6 +104,16 @@ function App() {
                     <ProtectedRoute>
                       <AppLayout language={language} onToggleLanguage={toggleLanguage}>
                         <ShiftsPage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/payroll"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <PayrollPage />
                       </AppLayout>
                     </ProtectedRoute>
                   }

@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useProfileRole, useUpdateProfileRole } from '../features/employees/hooks';
 import { EmployeeBranchAssignments } from './EmployeeBranchAssignments';
+import { EmployeeSalarySection } from './EmployeeSalarySection';
 import type { Branch, Employee, EmployeeInput, Role } from '../types/domain';
 
 interface EmployeeFormDialogProps {
@@ -127,6 +128,8 @@ function EmployeeFormFields({
               />
             </>
           )}
+
+          {employee && <EmployeeSalarySection employeeId={employee.id} />}
 
           {employee?.user_id && (
             <>
