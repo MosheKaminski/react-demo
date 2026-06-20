@@ -20,7 +20,7 @@ Goal: a running, deployable skeleton with no business logic yet.
 - [x] Install i18next + react-i18next, configure `he`/`en` locale files, RTL/LTR direction switch
 - [x] Create Supabase project (dev environment) — `react-demo-dev` (ref `chwdwpowwwmxpgqeddhc`, region `eu-central-1`)
 - [x] Install `@supabase/supabase-js`, set up Supabase client singleton with env vars (`.env.local`, never committed)
-- [x] Configure GitHub repo: PR template added; branch protection on `master` pending first CI run on this push
+- [x] Configure GitHub repo: PR template added; branch protection on `master` requires the `build` CI check to pass
 - [x] Set up Vercel project linked to GitHub repo — project created and env vars set; GitHub auto-deploy connection requires a one-time manual approval in the Vercel dashboard (CLI can't complete OAuth app installation non-interactively)
 - [x] Add basic CI (lint + typecheck + build) via GitHub Actions
 - [x] Commit: "Scaffold Vite + React + TS project with base tooling"

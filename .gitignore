@@ -30,3 +30,7 @@ dist-ssr
 
 .vercel
 supabase/.temp
+
+# Local-only Hebrew doc copies - never commit
+PRD.he.md
+TASKS.he.md
