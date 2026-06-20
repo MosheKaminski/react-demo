@@ -49,4 +49,52 @@ export interface BranchInput {
   manager_id?: string | null;
 }
 
+export type AttendanceSource = 'app' | 'manual_entry';
+export type AttendanceStatus = 'pending' | 'approved' | 'rejected';
+
+export interface AttendanceRecord {
+  id: string;
+  employee_id: string;
+  branch_id: string;
+  clock_in: string;
+  clock_out: string | null;
+  source: AttendanceSource;
+  geo_lat: number | null;
+  geo_lng: number | null;
+  status: AttendanceStatus;
+  approved_by: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface ManualAttendanceInput {
+  employee_id: string;
+  branch_id: string;
+  clock_in: string;
+  clock_out: string | null;
+  notes: string;
+}
+
+export type ShiftStatus = 'draft' | 'published' | 'completed' | 'cancelled';
+
+export interface Shift {
+  id: string;
+  branch_id: string;
+  employee_id: string | null;
+  start_time: string;
+  end_time: string;
+  role_in_shift: string | null;
+  status: ShiftStatus;
+  created_at: string;
+}
+
+export interface ShiftInput {
+  branch_id: string;
+  employee_id: string | null;
+  start_time: string;
+  end_time: string;
+  role_in_shift?: string | null;
+  status: ShiftStatus;
+}
+
 export type { Role };

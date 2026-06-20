@@ -134,6 +134,110 @@ async function main() {
     .insert({ full_name: 'Should Not Be Created', primary_branch_id: branchB.id });
   check('employee cannot create employee records', !!employeeCreateError);
 
+  // --- Milestone 3: attendance & shifts ---
+  const { data: managerEmployeeRow } = await admin
+    .from('employees')
+    .select('id')
+    .eq('full_name', 'Branch Manager (seed)')
+    .single();
+  const { data: employeeEmployeeRow } = await admin
+    .from('employees')
+    .select('id')
+    .eq('full_name', 'Employee (seed)')
+    .single();
+  if (!managerEmployeeRow || !employeeEmployeeRow) {
+    throw new Error('Seed employees not found - run npm run seed first.');
+  }
+
+  const { error: employeeAppClockInError } = await employee
+    .from('attendance_records')
+    .insert({ employee_id: employeeEmployeeRow.id, branch_id: branchB.id, source: 'app' });
+  check('employee can clock themselves in (source=app)', !employeeAppClockInError);
+  await admin
+    .from('attendance_records')
+    .delete()
+    .eq('employee_id', employeeEmployeeRow.id)
+    .eq('source', 'app');
+
+  const { error: employeeManualEntryError } = await employee.from('attendance_records').insert({
+    employee_id: employeeEmployeeRow.id,
+    branch_id: branchB.id,
+    source: 'manual_entry',
+    notes: 'attempt',
+  });
+  check('employee cannot create a manual_entry attendance record', !!employeeManualEntryError);
+
+  const { error: managerManualForeignBranchError } = await manager
+    .from('attendance_records')
+    .insert({
+      employee_id: employeeEmployeeRow.id,
+      branch_id: branchB.id,
+      source: 'manual_entry',
+      notes: 'attempt',
+    });
+  check(
+    `branch_manager cannot create a manual attendance record in "${BRANCH_B_NAME}"`,
+    !!managerManualForeignBranchError,
+  );
+
+  const { data: managerManualOwnBranch, error: managerManualOwnBranchError } = await manager
+    .from('attendance_records')
+    .insert({
+      employee_id: managerEmployeeRow.id,
+      branch_id: branchA.id,
+      source: 'manual_entry',
+      notes: 'RLS check temp record',
+    })
+    .select('id, status')
+    .single();
+  check(
+    `branch_manager can create a manual attendance record in "${BRANCH_A_NAME}" (status=pending)`,
+    !managerManualOwnBranchError && managerManualOwnBranch?.status === 'pending',
+  );
+  if (managerManualOwnBranch) {
+    await admin.from('attendance_records').delete().eq('id', managerManualOwnBranch.id);
+  }
+
+  const { error: managerShiftForeignBranchError } = await manager.from('shifts').insert({
+    branch_id: branchB.id,
+    employee_id: employeeEmployeeRow.id,
+    start_time: new Date().toISOString(),
+    end_time: new Date(Date.now() + 3600_000).toISOString(),
+    status: 'draft',
+  });
+  check(
+    `branch_manager cannot create a shift in "${BRANCH_B_NAME}"`,
+    !!managerShiftForeignBranchError,
+  );
+
+  const { data: managerOwnShift, error: managerShiftOwnBranchError } = await manager
+    .from('shifts')
+    .insert({
+      branch_id: branchA.id,
+      employee_id: managerEmployeeRow.id,
+      start_time: new Date().toISOString(),
+      end_time: new Date(Date.now() + 3600_000).toISOString(),
+      status: 'draft',
+    })
+    .select('id')
+    .single();
+  check(
+    `branch_manager can create a shift in "${BRANCH_A_NAME}"`,
+    !managerShiftOwnBranchError && !!managerOwnShift,
+  );
+  if (managerOwnShift) {
+    await admin.from('shifts').delete().eq('id', managerOwnShift.id);
+  }
+
+  const { error: employeeShiftWriteError } = await employee.from('shifts').insert({
+    branch_id: branchB.id,
+    employee_id: employeeEmployeeRow.id,
+    start_time: new Date().toISOString(),
+    end_time: new Date(Date.now() + 3600_000).toISOString(),
+    status: 'draft',
+  });
+  check('employee cannot create shifts', !!employeeShiftWriteError);
+
   console.log(failures === 0 ? '\nAll RLS checks passed.' : `\n${failures} RLS check(s) failed.`);
   process.exit(failures === 0 ? 0 : 1);
 }

@@ -16,6 +16,8 @@ import { DashboardPage } from './pages/DashboardPage';
 import { BranchesPage } from './pages/BranchesPage';
 import { EmployeesPage } from './pages/EmployeesPage';
 import { MyProfilePage } from './pages/MyProfilePage';
+import { AttendancePage } from './pages/AttendancePage';
+import { ShiftsPage } from './pages/ShiftsPage';
 
 function App() {
   const { i18n } = useTranslation();
@@ -81,6 +83,26 @@ function App() {
                     <ProtectedRoute>
                       <AppLayout language={language} onToggleLanguage={toggleLanguage}>
                         <MyProfilePage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/attendance"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <AttendancePage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/shifts"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <ShiftsPage />
                       </AppLayout>
                     </ProtectedRoute>
                   }

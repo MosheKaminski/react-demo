@@ -75,5 +75,59 @@
     "noEmployeeRecord": "אין עדיין רשומת עובד המקושרת לחשבון שלך. פנה למנהל המערכת.",
     "paySummary": "סיכום שכר",
     "paySummaryPlaceholder": "סיכומי שכר יופיעו כאן לאחר הקמת מנגנון השכר (Milestone 4)."
+  },
+  "attendance": {
+    "title": "נוכחות",
+    "clockIn": "כניסה",
+    "clockOut": "יציאה",
+    "currentlyClockedIn": "מוחתם מאז {{time}}",
+    "notClockedIn": "אינך מוחתם כרגע.",
+    "myHistory": "היסטוריית הנוכחות שלי",
+    "pendingApprovals": "ממתינים לאישור",
+    "noPendingApprovals": "אין רשומות נוכחות שמחכות לאישור.",
+    "approve": "אישור",
+    "reject": "דחייה",
+    "newManualEntry": "הזנה ידנית חדשה",
+    "manualEntryTitle": "הזנת נוכחות ידנית",
+    "employee": "עובד",
+    "branch": "סניף",
+    "clockInTime": "שעת כניסה",
+    "clockOutTime": "שעת יציאה",
+    "notes": "הערות",
+    "notesRequired": "הערה היא שדה חובה בהזנה ידנית",
+    "status": {
+      "pending": "בהמתנה",
+      "approved": "מאושר",
+      "rejected": "נדחה"
+    },
+    "source": {
+      "app": "אפליקציה",
+      "manual_entry": "ידני"
+    },
+    "noEmployeeRecord": "אין רשומת עובד המקושרת לחשבון שלך, ולכן לא ניתן להחתים כניסה/יציאה."
+  },
+  "shifts": {
+    "title": "משמרות",
+    "mySchedule": "המשמרות הקרובות שלי",
+    "noUpcomingShifts": "אין משמרות קרובות.",
+    "newShift": "משמרת חדשה",
+    "editShift": "עריכת משמרת",
+    "startTime": "שעת התחלה",
+    "endTime": "שעת סיום",
+    "employee": "עובד",
+    "unassigned": "לא מוקצה",
+    "roleInShift": "תפקיד במשמרת (אופציונלי)",
+    "branch": "סניף",
+    "filterByBranch": "סינון לפי סניף",
+    "publish": "פרסום",
+    "cancel": "ביטול משמרת",
+    "delete": "מחיקה",
+    "conflictWarning": "התנגשות: לעובד זה יש כבר משמרת מפורסמת אחרת שחופפת לזמן הזה.",
+    "status": {
+      "draft": "טיוטה",
+      "published": "מפורסם",
+      "completed": "הושלם",
+      "cancelled": "בוטל"
+    }
   }
 }

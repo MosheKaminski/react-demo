@@ -72,17 +72,17 @@ Goal: Admin/Branch Manager can manage branches and employees through the UI.
 
 Goal: employees can clock in/out, managers can build schedules, attendance approval workflow works.
 
-- [ ] `attendance_records` table + RLS (employee: own records; branch_manager: own branch; admin: all)
-- [ ] Clock-in / clock-out UI (button + server-side timestamp via Supabase RPC/Edge Function, optional geolocation capture with consent prompt)
-- [ ] Manual attendance entry form (Branch Manager) with mandatory note, status = `pending`
-- [ ] Attendance approval queue page (Branch Manager/Admin) — approve/reject pending entries
-- [ ] `shifts` table + RLS (branch-scoped)
-- [ ] Shift scheduling UI — weekly/monthly calendar view per branch, create/assign/publish shifts
-- [ ] Employee "My Shifts" read-only view
-- [ ] Conflict detection: flag overlapping shifts for the same employee across branches
-- [ ] Commit: "Add attendance tracking, approval workflow, and shift scheduling"
+- [x] `attendance_records` table + RLS (employee: own records; branch_manager: own branch; admin: all)
+- [x] Clock-in / clock-out UI (button + server-side timestamp via Supabase RPC/Edge Function, optional geolocation capture with consent prompt) — clock-in uses the `clock_in` column's DB default (`now()`); clock-out uses a `clock_out_attendance` SQL RPC (SECURITY INVOKER, so RLS still applies) so neither timestamp trusts the client clock; geolocation uses a best-effort `getCurrentPositionSafe()` helper that resolves to `null` on denial/timeout rather than blocking
+- [x] Manual attendance entry form (Branch Manager) with mandatory note, status = `pending`
+- [x] Attendance approval queue page (Branch Manager/Admin) — approve/reject pending entries
+- [x] `shifts` table + RLS (branch-scoped)
+- [x] Shift scheduling UI — implemented as a week-navigable table (prev/next week + branch filter) rather than a full calendar grid, to keep scope reasonable for MVP; create/assign/publish/cancel/delete all work
+- [x] Employee "My Shifts" read-only view — shown as a section on the same `/shifts` page (upcoming, non-cancelled shifts assigned to the current user)
+- [x] Conflict detection: flag overlapping shifts for the same employee across branches — non-blocking warning `Alert` in the shift dialog, checked against `published`/`completed` shifts only (drafts don't count as real conflicts)
+- [x] Commit: "Add attendance tracking, approval workflow, and shift scheduling"
 
-**Exit criteria:** An employee can clock in/out; a manager can approve it; a manager can build and publish a weekly schedule; an employee sees their upcoming shifts.
+**Exit criteria:** An employee can clock in/out; a manager can approve it; a manager can build and publish a weekly schedule; an employee sees their upcoming shifts. ✅ Verified end-to-end via Playwright (employee clock-in/out → approved history; manager manual entry → approval queue → approve; shift creation → publish → overlap warning on a second conflicting shift; branch-scoped employee dropdown in the shift form). `npm run verify-rls` extended with 7 more checks (15/15 pass) covering attendance/shift read+write scoping for all three roles.
 
 ---
 

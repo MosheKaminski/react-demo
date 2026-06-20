@@ -75,5 +75,59 @@
     "noEmployeeRecord": "No employee record is linked to your account yet. Contact your administrator.",
     "paySummary": "Pay summary",
     "paySummaryPlaceholder": "Pay summaries will appear here once payroll is set up (Milestone 4)."
+  },
+  "attendance": {
+    "title": "Attendance",
+    "clockIn": "Clock in",
+    "clockOut": "Clock out",
+    "currentlyClockedIn": "Clocked in since {{time}}",
+    "notClockedIn": "You are not clocked in.",
+    "myHistory": "My attendance history",
+    "pendingApprovals": "Pending approvals",
+    "noPendingApprovals": "No attendance records waiting for approval.",
+    "approve": "Approve",
+    "reject": "Reject",
+    "newManualEntry": "New manual entry",
+    "manualEntryTitle": "Manual attendance entry",
+    "employee": "Employee",
+    "branch": "Branch",
+    "clockInTime": "Clock-in time",
+    "clockOutTime": "Clock-out time",
+    "notes": "Notes",
+    "notesRequired": "A note is required for manual entries",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "source": {
+      "app": "App",
+      "manual_entry": "Manual"
+    },
+    "noEmployeeRecord": "No employee record is linked to your account, so you cannot clock in/out."
+  },
+  "shifts": {
+    "title": "Shifts",
+    "mySchedule": "My upcoming shifts",
+    "noUpcomingShifts": "No upcoming shifts.",
+    "newShift": "New shift",
+    "editShift": "Edit shift",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "employee": "Employee",
+    "unassigned": "Unassigned",
+    "roleInShift": "Role in shift (optional)",
+    "branch": "Branch",
+    "filterByBranch": "Filter by branch",
+    "publish": "Publish",
+    "cancel": "Cancel shift",
+    "delete": "Delete",
+    "conflictWarning": "Conflict: this employee already has another published shift overlapping this time.",
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
   }
 }
