@@ -138,6 +138,7 @@ Goal: actionable visibility for managers and admin.
 
 Goal: production-readiness pass.
 
+- [ ] Visual design pass — consistent icon set (`@mui/icons-material`, already installed) across nav/actions/empty states, refined color/typography theme, polished spacing across all screens built in Milestones 2–6
 - [ ] Full i18n audit — no hardcoded strings, verify Hebrew RTL layout on every screen
 - [ ] Responsive design pass (mobile clock-in flow is priority)
 - [ ] Empty states, loading states, and error handling audit across all pages
