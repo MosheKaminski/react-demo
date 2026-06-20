@@ -12,5 +12,14 @@
     "documents": "Documents",
     "login": "Log in",
     "logout": "Log out"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "invalidCredentials": "Invalid email or password.",
+    "loggedInAs": "Logged in as {{email}}",
+    "role": "Role"
   }
 }

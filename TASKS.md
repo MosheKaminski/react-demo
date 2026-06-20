@@ -33,14 +33,16 @@ Goal: a running, deployable skeleton with no business logic yet.
 
 Goal: schema, RLS policies, and login working end-to-end.
 
-- [ ] Design and create core tables in Supabase: `organizations`, `branches`, `employees`, `salary_profiles`
-- [ ] Create `profiles` table linked to `auth.users` (role: admin / branch_manager / employee, linked employee_id)
-- [ ] Write RLS policies for `branches` and `employees` (admin: full access; branch_manager: own branch only; employee: self only)
-- [ ] Set up Supabase Auth (email/password) — sign in / sign out flows in the frontend
-- [ ] Build route guard / auth context (`useAuth` hook, protected routes by role)
-- [ ] Build basic login page (i18n-aware, RTL/LTR)
-- [ ] Seed script: create one admin user + sample branch for local dev/testing
-- [ ] Commit: "Add core schema, RLS policies, and authentication"
+- [x] Design and create core tables in Supabase: `organizations`, `branches`, `employees`, `salary_profiles` — also added `employee_branch_assignments` (multi-branch support, PRD FR-5) in migration `20260620204635_init_schema.sql`
+- [x] Create `profiles` table linked to `auth.users` (role: admin / branch_manager / employee, linked employee_id) — role lives on `profiles`; `employees.user_id` links back to it. New signups default to `employee` via the `handle_new_user` trigger.
+- [x] Write RLS policies for `branches` and `employees` (admin: full access; branch_manager: own branch only; employee: self only) — implemented via `is_admin()`/`managed_branch_ids()`/`member_branch_ids()`/`current_employee_id()` SECURITY DEFINER helper functions; also added baseline RLS for `organizations` and `salary_profiles` ahead of schedule (admin-only / branch-manager-read, refined further in Milestone 4)
+- [x] Set up Supabase Auth (email/password) — sign in / sign out flows in the frontend
+- [x] Build route guard / auth context (`useAuth` hook, protected routes by role) — `AuthProvider` + `useAuth` + `ProtectedRoute` (supports `allowedRoles`)
+- [x] Build basic login page (i18n-aware, RTL/LTR)
+- [x] Seed script: create one admin user + sample branch for local dev/testing — `npm run seed` creates an admin, a branch_manager (scoped to "Main Branch"), and an employee (in "Second Branch") for RLS testing
+- [x] Commit: "Add core schema, RLS policies, and authentication"
+
+**Verification:** `npm run verify-rls` signs in as the seeded branch_manager and employee accounts and asserts they only see their own branch/employee data — all checks pass. End-to-end browser test (login → dashboard shows email/role → language toggle switches RTL/LTR → logout) verified manually via Playwright, no console errors.
 
 **Exit criteria:** A seeded admin user can log in; RLS verified manually (a branch_manager test user cannot query another branch's data via the Supabase client).
 

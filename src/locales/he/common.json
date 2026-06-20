@@ -12,5 +12,14 @@
     "documents": "מסמכים",
     "login": "התחברות",
     "logout": "התנתקות"
+  },
+  "auth": {
+    "email": "אימייל",
+    "password": "סיסמה",
+    "signIn": "התחברות",
+    "signingIn": "מתחבר...",
+    "invalidCredentials": "אימייל או סיסמה שגויים.",
+    "loggedInAs": "מחובר בשם {{email}}",
+    "role": "תפקיד"
   }
 }
