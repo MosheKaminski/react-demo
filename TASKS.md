@@ -52,17 +52,19 @@ Goal: schema, RLS policies, and login working end-to-end.
 
 Goal: Admin/Branch Manager can manage branches and employees through the UI.
 
-- [ ] Branch list page (Admin) — table with create/edit/deactivate
-- [ ] Branch create/edit form (name, address, phone, manager assignment)
-- [ ] Employee list page — filterable by branch, role, active status
-- [ ] Employee create/edit form (personal info, start/end date, role, primary branch)
-- [ ] Multi-branch assignment UI (`EmployeeBranchAssignment`) — assign employee to additional branches
-- [ ] Employee self-service profile page (read-only personal info + pay summary placeholder)
-- [ ] Soft-deactivation flow (set `end_date`, hide from active lists, retain historical data)
-- [ ] RLS coverage tests for branch/employee CRUD (manual or scripted)
-- [ ] Commit: "Add branch and employee CRUD management"
+- [x] Branch list page (Admin) — table with create/edit/deactivate
+- [x] Branch create/edit form (name, address, phone, manager assignment)
+- [x] Employee list page — filterable by branch, role, active status
+- [x] Employee create/edit form (personal info, start/end date, role, primary branch) — role is shown/editable only once the employee has a linked login account (`profiles.role`); creating a login account is a future "invite" feature, out of scope for this milestone
+- [x] Multi-branch assignment UI (`EmployeeBranchAssignment`) — assign employee to additional branches
+- [x] Employee self-service profile page (read-only personal info + pay summary placeholder)
+- [x] Soft-deactivation flow (set `end_date`, hide from active lists, retain historical data) — also supports reactivation
+- [x] RLS coverage tests for branch/employee CRUD (manual or scripted) — extended `npm run verify-rls` with write-side checks (branch_manager blocked from creating branches/foreign-branch employees, allowed within own branch; employee blocked from any employee inserts)
+- [x] Commit: "Add branch and employee CRUD management"
 
-**Exit criteria:** Admin can create a branch, assign a manager, create employees, and assign them to branches; Branch Manager sees only their branch's employees.
+**Exit criteria:** Admin can create a branch, assign a manager, create employees, and assign them to branches; Branch Manager sees only their branch's employees. ✅ Verified via `npm run verify-rls` (8/8 checks pass) and an end-to-end Playwright pass driving all three seeded roles through the real UI (branch/employee create, deactivate, filter, nav visibility by role, cross-branch isolation).
+
+**Bug found & fixed during verification:** React Query cached server data by query key only, not by user — switching users in the same tab (sign out, sign in as someone else) could briefly show the previous user's cached rows before refetching. Fixed by clearing the query cache whenever the authenticated user id changes (`AuthContext.tsx`).
 
 ---
 

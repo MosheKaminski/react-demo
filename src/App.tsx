@@ -1,15 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { CacheProvider } from '@emotion/react';
-import { ThemeProvider, CssBaseline, Container, Button } from '@mui/material';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { ltrCache, rtlCache } from './lib/rtlCache';
 import { getTheme } from './lib/theme';
 import { RTL_LANGUAGES } from './lib/i18n';
+import { queryClient } from './lib/queryClient';
 import { AuthProvider } from './lib/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AppLayout } from './components/AppLayout';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { BranchesPage } from './pages/BranchesPage';
+import { EmployeesPage } from './pages/EmployeesPage';
+import { MyProfilePage } from './pages/MyProfilePage';
 
 function App() {
   const { i18n } = useTranslation();
@@ -31,31 +37,60 @@ function App() {
   };
 
   return (
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <AuthProvider>
-            <Container sx={{ py: 4 }}>
-              <Button variant="text" onClick={toggleLanguage} sx={{ mb: 2 }}>
-                {language === 'he' ? 'English' : 'עברית'}
-              </Button>
+    <QueryClientProvider client={queryClient}>
+      <CacheProvider value={cache}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BrowserRouter>
+            <AuthProvider>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route
                   path="/"
                   element={
                     <ProtectedRoute>
-                      <DashboardPage />
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <DashboardPage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/branches"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <BranchesPage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/employees"
+                  element={
+                    <ProtectedRoute allowedRoles={['admin', 'branch_manager']}>
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <EmployeesPage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/me"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                        <MyProfilePage />
+                      </AppLayout>
                     </ProtectedRoute>
                   }
                 />
               </Routes>
-            </Container>
-          </AuthProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </CacheProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </CacheProvider>
+    </QueryClientProvider>
   );
 }
 

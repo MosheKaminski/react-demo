@@ -6,6 +6,7 @@
     "dashboard": "דשבורד",
     "branches": "סניפים",
     "employees": "עובדים",
+    "myProfile": "הפרופיל שלי",
     "attendance": "נוכחות",
     "shifts": "משמרות",
     "payroll": "שכר",
@@ -21,5 +22,58 @@
     "invalidCredentials": "אימייל או סיסמה שגויים.",
     "loggedInAs": "מחובר בשם {{email}}",
     "role": "תפקיד"
+  },
+  "common": {
+    "save": "שמירה",
+    "cancel": "ביטול",
+    "create": "יצירה",
+    "edit": "עריכה",
+    "deactivate": "השבתה",
+    "reactivate": "הפעלה מחדש",
+    "active": "פעיל",
+    "inactive": "לא פעיל",
+    "all": "הכל",
+    "name": "שם",
+    "address": "כתובת",
+    "phone": "טלפון",
+    "email": "אימייל",
+    "status": "סטטוס",
+    "actions": "פעולות",
+    "none": "ללא",
+    "loading": "טוען...",
+    "error": "אירעה תקלה.",
+    "confirmDeactivateTitle": "להשבית?",
+    "confirmDeactivateBody": "הפעולה מסתירה מרשימות פעילות אך משמרת את הנתונים ההיסטוריים.",
+    "confirm": "אישור"
+  },
+  "branches": {
+    "title": "סניפים",
+    "newBranch": "סניף חדש",
+    "editBranch": "עריכת סניף",
+    "manager": "מנהל סניף",
+    "noManager": "לא הוקצה מנהל"
+  },
+  "employees": {
+    "title": "עובדים",
+    "newEmployee": "עובד חדש",
+    "editEmployee": "עריכת עובד",
+    "fullName": "שם מלא",
+    "idNumber": "תעודת זהות",
+    "startDate": "תאריך תחילת עבודה",
+    "endDate": "תאריך סיום",
+    "primaryBranch": "סניף ראשי",
+    "filterByBranch": "סינון לפי סניף",
+    "filterByStatus": "סינון לפי סטטוס",
+    "additionalBranches": "סניפים נוספים",
+    "addBranch": "הוספת סניף",
+    "remove": "הסרה",
+    "profileRole": "תפקיד בחשבון",
+    "noLinkedAccount": "אין עדיין חשבון התחברות מקושר"
+  },
+  "myProfile": {
+    "title": "הפרופיל שלי",
+    "noEmployeeRecord": "אין עדיין רשומת עובד המקושרת לחשבון שלך. פנה למנהל המערכת.",
+    "paySummary": "סיכום שכר",
+    "paySummaryPlaceholder": "סיכומי שכר יופיעו כאן לאחר הקמת מנגנון השכר (Milestone 4)."
   }
 }

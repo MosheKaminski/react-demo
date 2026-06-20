@@ -6,6 +6,7 @@
     "dashboard": "Dashboard",
     "branches": "Branches",
     "employees": "Employees",
+    "myProfile": "My Profile",
     "attendance": "Attendance",
     "shifts": "Shifts",
     "payroll": "Payroll",
@@ -21,5 +22,58 @@
     "invalidCredentials": "Invalid email or password.",
     "loggedInAs": "Logged in as {{email}}",
     "role": "Role"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create",
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate",
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All",
+    "name": "Name",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "status": "Status",
+    "actions": "Actions",
+    "none": "None",
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "confirmDeactivateTitle": "Deactivate?",
+    "confirmDeactivateBody": "This hides it from active lists but keeps historical data.",
+    "confirm": "Confirm"
+  },
+  "branches": {
+    "title": "Branches",
+    "newBranch": "New branch",
+    "editBranch": "Edit branch",
+    "manager": "Manager",
+    "noManager": "No manager assigned"
+  },
+  "employees": {
+    "title": "Employees",
+    "newEmployee": "New employee",
+    "editEmployee": "Edit employee",
+    "fullName": "Full name",
+    "idNumber": "ID number",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "primaryBranch": "Primary branch",
+    "filterByBranch": "Filter by branch",
+    "filterByStatus": "Filter by status",
+    "additionalBranches": "Additional branches",
+    "addBranch": "Add branch",
+    "remove": "Remove",
+    "profileRole": "Account role",
+    "noLinkedAccount": "No linked login account yet"
+  },
+  "myProfile": {
+    "title": "My profile",
+    "noEmployeeRecord": "No employee record is linked to your account yet. Contact your administrator.",
+    "paySummary": "Pay summary",
+    "paySummaryPlaceholder": "Pay summaries will appear here once payroll is set up (Milestone 4)."
   }
 }
