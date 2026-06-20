@@ -16,6 +16,7 @@ import { useBranches } from '../features/branches/hooks';
 import { useEmployeeByUserId } from '../features/employees/hooks';
 import { usePayrollLinesForEmployee } from '../features/payroll/hooks';
 import { getPayrollPdfSignedUrl } from '../features/payroll/api';
+import { EmployeeDocumentsSection } from '../components/EmployeeDocumentsSection';
 
 export function MyProfilePage() {
   const { t } = useTranslation();
@@ -106,6 +107,9 @@ export function MyProfilePage() {
         <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
           {t('payroll.disclaimer')}
         </Typography>
+      </Paper>
+      <Paper sx={{ p: 3 }}>
+        <EmployeeDocumentsSection employeeId={employee.id} />
       </Paper>
     </Stack>
   );

@@ -181,5 +181,17 @@
       "draft": "טיוטה",
       "finalized": "סגור"
     }
+  },
+  "documents": {
+    "title": "מסמכים",
+    "documentType": "סוג מסמך",
+    "upload": "העלאה",
+    "none": "לא הועלו מסמכים עדיין.",
+    "type": {
+      "contract": "חוזה",
+      "id_copy": "צילום ת\"ז",
+      "receipt": "קבלה",
+      "other": "אחר"
+    }
   }
 }

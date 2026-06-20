@@ -121,6 +121,10 @@ async function main() {
     `employee cannot see "${BRANCH_A_NAME}" managed by someone else`,
     !employeeBranchNames.includes(BRANCH_A_NAME),
   );
+  check(
+    `employee can see their own primary branch "${BRANCH_B_NAME}"`,
+    employeeBranchNames.includes(BRANCH_B_NAME),
+  );
 
   const { data: employeeOwnRow, error: employeeOwnRowError } = await employee
     .from('employees')

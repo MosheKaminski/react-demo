@@ -179,4 +179,15 @@ export interface PayrollLine {
   created_at: string;
 }
 
+export type DocumentType = 'contract' | 'id_copy' | 'receipt' | 'other';
+
+export interface EmployeeDocument {
+  id: string;
+  employee_id: string;
+  type: DocumentType;
+  file_path: string;
+  uploaded_by: string | null;
+  uploaded_at: string;
+}
+
 export type { Role };

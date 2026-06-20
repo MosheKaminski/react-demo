@@ -15,6 +15,7 @@ import {
 import { useProfileRole, useUpdateProfileRole } from '../features/employees/hooks';
 import { EmployeeBranchAssignments } from './EmployeeBranchAssignments';
 import { EmployeeSalarySection } from './EmployeeSalarySection';
+import { EmployeeDocumentsSection } from './EmployeeDocumentsSection';
 import type { Branch, Employee, EmployeeInput, Role } from '../types/domain';
 
 interface EmployeeFormDialogProps {
@@ -130,6 +131,13 @@ function EmployeeFormFields({
           )}
 
           {employee && <EmployeeSalarySection employeeId={employee.id} />}
+
+          {employee && (
+            <>
+              <Divider />
+              <EmployeeDocumentsSection employeeId={employee.id} />
+            </>
+          )}
 
           {employee?.user_id && (
             <>

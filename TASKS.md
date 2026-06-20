@@ -113,13 +113,15 @@ Goal: automatic, legally-compliant overtime calculation and a working monthly pa
 
 Goal: secure document upload/storage tied to employees.
 
-- [ ] Create private Supabase Storage bucket for employee documents
-- [ ] `documents` table + RLS mirroring access rules (admin: all; branch_manager: own branch; employee: own only)
-- [ ] Document upload UI on employee profile (type: contract/id_copy/receipt/other)
-- [ ] Document list/download UI with signed URL generation
-- [ ] Commit: "Add employee document upload and storage"
+- [x] Create private Supabase Storage bucket for employee documents — `employee-documents`, path convention `documents/<employee_id>/<filename>`
+- [x] `documents` table + RLS mirroring access rules (admin: all; branch_manager: own branch; employee: own only) — extended slightly beyond the PRD wording: an employee can also self-upload/delete their own documents (e.g. a signed contract), matching PRD §2 role description for Employee ("Upload personal documents")
+- [x] Document upload UI on employee profile (type: contract/id_copy/receipt/other) — shared `EmployeeDocumentsSection` component embedded in both the admin/branch_manager employee-edit dialog and the employee's own My Profile page
+- [x] Document list/download UI with signed URL generation
+- [x] Commit: "Add employee document upload and storage"
 
-**Exit criteria:** A contract uploaded for an employee is visible only to Admin, that employee's Branch Manager, and the employee themselves.
+**Bug found & fixed during verification:** an employee could not see their own *primary* branch in the `branches` table — `branches_select_scoped` only checked branches they manage or are an additional (non-primary) member of, never their own `primary_branch_id`. Fixed with a `primary_branch_id()` helper function and an updated policy. `npm run verify-rls` extended to 23/23 checks including a regression test for this.
+
+**Exit criteria:** A contract uploaded for an employee is visible only to Admin, that employee's Branch Manager, and the employee themselves. ✅ Verified end-to-end via Playwright: branch_manager uploads own document → admin sees it while editing that employee, uploads a second document, deletes one → employee in a different branch uploads their own document and only ever sees their own (no nav access to other employees' records at all).
 
 ---
 

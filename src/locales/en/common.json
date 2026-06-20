@@ -181,5 +181,17 @@
       "draft": "Draft",
       "finalized": "Finalized"
     }
+  },
+  "documents": {
+    "title": "Documents",
+    "documentType": "Document type",
+    "upload": "Upload",
+    "none": "No documents uploaded yet.",
+    "type": {
+      "contract": "Contract",
+      "id_copy": "ID copy",
+      "receipt": "Receipt",
+      "other": "Other"
+    }
   }
 }
