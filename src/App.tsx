@@ -52,7 +52,7 @@ function App() {
                   path="/"
                   element={
                     <ProtectedRoute>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <DashboardPage />
                       </AppLayout>
                     </ProtectedRoute>
@@ -62,7 +62,7 @@ function App() {
                   path="/branches"
                   element={
                     <ProtectedRoute allowedRoles={['admin']}>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <BranchesPage />
                       </AppLayout>
                     </ProtectedRoute>
@@ -72,7 +72,7 @@ function App() {
                   path="/employees"
                   element={
                     <ProtectedRoute allowedRoles={['admin', 'branch_manager']}>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <EmployeesPage />
                       </AppLayout>
                     </ProtectedRoute>
@@ -82,7 +82,7 @@ function App() {
                   path="/me"
                   element={
                     <ProtectedRoute>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <MyProfilePage />
                       </AppLayout>
                     </ProtectedRoute>
@@ -92,7 +92,7 @@ function App() {
                   path="/attendance"
                   element={
                     <ProtectedRoute>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <AttendancePage />
                       </AppLayout>
                     </ProtectedRoute>
@@ -102,7 +102,7 @@ function App() {
                   path="/shifts"
                   element={
                     <ProtectedRoute>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <ShiftsPage />
                       </AppLayout>
                     </ProtectedRoute>
@@ -112,7 +112,7 @@ function App() {
                   path="/payroll"
                   element={
                     <ProtectedRoute allowedRoles={['admin']}>
-                      <AppLayout language={language} onToggleLanguage={toggleLanguage}>
+                      <AppLayout onToggleLanguage={toggleLanguage}>
                         <PayrollPage />
                       </AppLayout>
                     </ProtectedRoute>

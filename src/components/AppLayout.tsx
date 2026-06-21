@@ -29,11 +29,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../lib/useAuth';
-import { RTL_LANGUAGES } from '../lib/i18n';
 
 interface AppLayoutProps {
   children: ReactNode;
-  language: string;
   onToggleLanguage: () => void;
 }
 
@@ -43,7 +41,7 @@ interface NavItem {
   icon: ReactNode;
 }
 
-export function AppLayout({ children, language, onToggleLanguage }: AppLayoutProps) {
+export function AppLayout({ children, onToggleLanguage }: AppLayoutProps) {
   const { t } = useTranslation();
   const { profile, signOut } = useAuth();
   const location = useLocation();
@@ -110,11 +108,10 @@ export function AppLayout({ children, language, onToggleLanguage }: AppLayoutPro
         </Toolbar>
       </AppBar>
 
-      <Drawer
-        anchor={RTL_LANGUAGES.includes(language) ? 'right' : 'left'}
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      >
+      {/* MUI auto-flips the anchor side under an RTL theme, so "left" here
+          visually opens from the right in Hebrew, matching the hamburger's
+          edge="start" position - don't manually flip this. */}
+      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <Box sx={{ width: 260 }} role="presentation">
           <List>
             {navItems.map((item) => (
