@@ -129,12 +129,14 @@ Goal: secure document upload/storage tied to employees.
 
 Goal: actionable visibility for managers and admin.
 
-- [ ] Branch dashboard: headcount, total hours (regular/overtime split), labor cost, pending approvals count
-- [ ] Organization dashboard (Admin only): cross-branch cost comparison, month-over-month trend chart
-- [ ] Employee list with filters (branch, role, active status) reused across Admin/Branch Manager views
-- [ ] Commit: "Add branch and organization dashboards"
+- [x] Branch dashboard: headcount, total hours (regular/overtime split), labor cost, pending approvals count — computed as a **live snapshot** (not dependent on a payroll run having been triggered) by re-running the same pure overtime/pay calculation from Milestone 4 directly against current attendance + salary data, so it reflects reality even mid-month
+- [x] Organization dashboard (Admin only): cross-branch cost comparison, month-over-month trend chart — implemented as lightweight proportional bar charts (plain MUI `Box` width percentages) rather than pulling in a charting library, to keep the dependency footprint small for an MVP-scale visualization
+- [x] Employee list with filters (branch, role, active status) reused across Admin/Branch Manager views — added the missing "role" filter (admin-only: branch_manager can't read other users' `profiles.role` under RLS, so the filter is hidden for them rather than silently returning nothing)
+- [x] Commit: "Add branch and organization dashboards"
 
-**Exit criteria:** Admin can compare labor cost across all branches for the current month; a Branch Manager sees their own branch's live attendance/cost snapshot.
+**Known simplification:** dashboard metrics are computed live on each request by aggregating attendance/salary data client-side rather than precomputed/cached server-side. Fine at MVP scale (NFR target: ≤50 branches / ≤1,000 employees); would need server-side materialization to stay performant at larger scale, especially the 6-month trend (re-runs the per-branch calculation 6×).
+
+**Exit criteria:** Admin can compare labor cost across all branches for the current month; a Branch Manager sees their own branch's live attendance/cost snapshot. ✅ Verified end-to-end via Playwright: seeded a 9-hour approved shift + a pending manual entry for the branch_manager; their branch dashboard showed the exact expected labor cost (555.00 = 8h×60 + 1h×60×1.25) and a pending-approvals count of 1; the admin's org dashboard showed the identical 555.00 for that branch in the cross-branch comparison; the new role filter correctly isolated branch_managers from employees in the employee list.
 
 ---
 

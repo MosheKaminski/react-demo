@@ -28,3 +28,14 @@ export async function setBranchActive(id: string, isActive: boolean): Promise<vo
   const { error } = await supabase.from('branches').update({ is_active: isActive }).eq('id', id);
   if (error) throw error;
 }
+
+export async function getManagedBranch(employeeId: string): Promise<Branch | null> {
+  const { data, error } = await supabase
+    .from('branches')
+    .select('*')
+    .eq('manager_id', employeeId)
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data as Branch | null;
+}

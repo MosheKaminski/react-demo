@@ -14,16 +14,27 @@ import {
   TextField,
   MenuItem,
 } from '@mui/material';
+import { useAuth } from '../lib/useAuth';
 import { useBranches } from '../features/branches/hooks';
-import { useCreateEmployee, useEmployees, useSetEmployeeActive, useUpdateEmployee } from '../features/employees/hooks';
+import {
+  useAllProfiles,
+  useCreateEmployee,
+  useEmployees,
+  useSetEmployeeActive,
+  useUpdateEmployee,
+} from '../features/employees/hooks';
 import { EmployeeFormDialog } from '../components/EmployeeFormDialog';
-import type { Employee, EmployeeInput } from '../types/domain';
+import type { Employee, EmployeeInput, Role } from '../types/domain';
 
 export function EmployeesPage() {
   const { t } = useTranslation();
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === 'admin';
   const { data: branches } = useBranches();
+  const { data: allProfiles } = useAllProfiles();
   const [branchFilter, setBranchFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('active');
+  const [roleFilter, setRoleFilter] = useState<'all' | Role>('all');
 
   const { data: employees, isLoading } = useEmployees({
     branchId: branchFilter || undefined,
@@ -41,6 +52,19 @@ export function EmployeesPage() {
     (branches ?? []).forEach((b) => map.set(b.id, b.name));
     return map;
   }, [branches]);
+
+  const roleByUserId = useMemo(() => {
+    const map = new Map<string, Role>();
+    (allProfiles ?? []).forEach((p) => map.set(p.id, p.role));
+    return map;
+  }, [allProfiles]);
+
+  const visibleEmployees = useMemo(() => {
+    if (!isAdmin || roleFilter === 'all') return employees ?? [];
+    return (employees ?? []).filter(
+      (e) => e.user_id && roleByUserId.get(e.user_id) === roleFilter,
+    );
+  }, [employees, isAdmin, roleFilter, roleByUserId]);
 
   const openCreate = () => {
     setEditingEmployee(null);
@@ -95,6 +119,21 @@ export function EmployeesPage() {
           <MenuItem value="inactive">{t('common.inactive')}</MenuItem>
           <MenuItem value="all">{t('common.all')}</MenuItem>
         </TextField>
+        {isAdmin && (
+          <TextField
+            select
+            size="small"
+            label={t('employees.filterByRole')}
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value as 'all' | Role)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value="all">{t('common.all')}</MenuItem>
+            <MenuItem value="admin">admin</MenuItem>
+            <MenuItem value="branch_manager">branch_manager</MenuItem>
+            <MenuItem value="employee">employee</MenuItem>
+          </TextField>
+        )}
       </Stack>
 
       {isLoading ? (
@@ -112,7 +151,7 @@ export function EmployeesPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(employees ?? []).map((employee) => (
+            {visibleEmployees.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>{employee.full_name}</TableCell>
                 <TableCell>

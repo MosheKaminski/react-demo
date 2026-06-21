@@ -64,6 +64,7 @@
     "primaryBranch": "Primary branch",
     "filterByBranch": "Filter by branch",
     "filterByStatus": "Filter by status",
+    "filterByRole": "Filter by account role",
     "additionalBranches": "Additional branches",
     "addBranch": "Add branch",
     "remove": "Remove",
@@ -193,5 +194,18 @@
       "receipt": "Receipt",
       "other": "Other"
     }
+  },
+  "dashboard": {
+    "branchDashboard": "Branch dashboard",
+    "orgDashboard": "Organization dashboard",
+    "headcount": "Headcount",
+    "regularHours": "Regular hours",
+    "overtimeHours": "Overtime hours",
+    "laborCost": "Labor cost",
+    "pendingApprovals": "Pending approvals",
+    "selectBranch": "Branch",
+    "costComparison": "Labor cost by branch (this month)",
+    "monthlyTrend": "Organization labor cost trend (last 6 months)",
+    "noBranches": "No branches yet."
   }
 }

@@ -64,6 +64,7 @@
     "primaryBranch": "סניף ראשי",
     "filterByBranch": "סינון לפי סניף",
     "filterByStatus": "סינון לפי סטטוס",
+    "filterByRole": "סינון לפי תפקיד בחשבון",
     "additionalBranches": "סניפים נוספים",
     "addBranch": "הוספת סניף",
     "remove": "הסרה",
@@ -193,5 +194,18 @@
       "receipt": "קבלה",
       "other": "אחר"
     }
+  },
+  "dashboard": {
+    "branchDashboard": "דשבורד סניף",
+    "orgDashboard": "דשבורד ארגוני",
+    "headcount": "מצבת עובדים",
+    "regularHours": "שעות רגילות",
+    "overtimeHours": "שעות נוספות",
+    "laborCost": "עלות עבודה",
+    "pendingApprovals": "ממתינים לאישור",
+    "selectBranch": "סניף",
+    "costComparison": "עלות עבודה לפי סניף (החודש)",
+    "monthlyTrend": "מגמת עלות עבודה ארגונית (6 חודשים אחרונים)",
+    "noBranches": "אין עדיין סניפים."
   }
 }

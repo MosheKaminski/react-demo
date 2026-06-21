@@ -104,3 +104,10 @@ export async function getProfileRole(userId: string): Promise<Role | null> {
   if (error) throw error;
   return (data?.role as Role | undefined) ?? null;
 }
+
+/** Admin-only in practice: RLS only lets admins read other users' profiles. */
+export async function listAllProfiles(): Promise<{ id: string; role: Role }[]> {
+  const { data, error } = await supabase.from('profiles').select('id, role');
+  if (error) throw error;
+  return data as { id: string; role: Role }[];
+}

@@ -85,3 +85,7 @@ export function useProfileRole(userId: string | null | undefined) {
     enabled: !!userId,
   });
 }
+
+export function useAllProfiles() {
+  return useQuery({ queryKey: ['all-profiles'] as const, queryFn: api.listAllProfiles });
+}

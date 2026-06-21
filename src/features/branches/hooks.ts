@@ -33,3 +33,11 @@ export function useSetBranchActive() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: BRANCHES_KEY }),
   });
 }
+
+export function useManagedBranch(employeeId: string | undefined) {
+  return useQuery({
+    queryKey: ['managed-branch', employeeId] as const,
+    queryFn: () => api.getManagedBranch(employeeId!),
+    enabled: !!employeeId,
+  });
+}
