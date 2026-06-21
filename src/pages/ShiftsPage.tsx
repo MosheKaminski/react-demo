@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Stack,
   Typography,
+  TableContainer,
   Table,
   TableHead,
   TableRow,
@@ -17,10 +18,20 @@ import {
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import PublishIcon from '@mui/icons-material/Publish';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { useAuth } from '../lib/useAuth';
 import { useBranches } from '../features/branches/hooks';
 import { useEmployeeByUserId, useEmployees } from '../features/employees/hooks';
-import { useCreateShift, useDeleteShift, useShifts, useUpdateShift } from '../features/shifts/hooks';
+import {
+  useCreateShift,
+  useDeleteShift,
+  useShifts,
+  useUpdateShift,
+} from '../features/shifts/hooks';
 import { ShiftFormDialog } from '../components/ShiftFormDialog';
 import type { Shift, ShiftInput, ShiftStatus } from '../types/domain';
 
@@ -117,75 +128,104 @@ export function ShiftsPage() {
                 </MenuItem>
               ))}
             </TextField>
-            <IconButton onClick={() => setWeekOffset((w) => w - 1)} aria-label="previous week">
+            <IconButton
+              onClick={() => setWeekOffset((w) => w - 1)}
+              aria-label={t('shifts.previousWeek')}
+            >
               <ChevronLeftIcon />
             </IconButton>
             <Typography>
-              {weekStart.toLocaleDateString()} – {new Date(weekEnd.getTime() - 1).toLocaleDateString()}
+              {weekStart.toLocaleDateString()} –{' '}
+              {new Date(weekEnd.getTime() - 1).toLocaleDateString()}
             </Typography>
-            <IconButton onClick={() => setWeekOffset((w) => w + 1)} aria-label="next week">
+            <IconButton
+              onClick={() => setWeekOffset((w) => w + 1)}
+              aria-label={t('shifts.nextWeek')}
+            >
               <ChevronRightIcon />
             </IconButton>
-            <Button variant="contained" onClick={openCreate} disabled={!effectiveBranchId}>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={openCreate}
+              disabled={!effectiveBranchId}
+            >
               {t('shifts.newShift')}
             </Button>
           </Stack>
 
           {isLoading ? (
             <CircularProgress />
+          ) : (branchShifts ?? []).length === 0 ? (
+            <Stack spacing={1} sx={{ alignItems: 'center', py: 4, color: 'text.secondary' }}>
+              <EventBusyIcon fontSize="large" />
+              <Typography>{t('shifts.noUpcomingShifts')}</Typography>
+            </Stack>
           ) : (
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('shifts.employee')}</TableCell>
-                  <TableCell>{t('shifts.startTime')}</TableCell>
-                  <TableCell>{t('shifts.endTime')}</TableCell>
-                  <TableCell>{t('common.status')}</TableCell>
-                  <TableCell>{t('common.actions')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(branchShifts ?? []).map((shift) => (
-                  <TableRow key={shift.id}>
-                    <TableCell>
-                      {shift.employee_id
-                        ? employeeNameById.get(shift.employee_id) ?? '—'
-                        : t('shifts.unassigned')}
-                    </TableCell>
-                    <TableCell>{new Date(shift.start_time).toLocaleString()}</TableCell>
-                    <TableCell>{new Date(shift.end_time).toLocaleString()}</TableCell>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        label={t(`shifts.status.${shift.status}`)}
-                        color={STATUS_COLOR[shift.status]}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Stack direction="row" spacing={1}>
-                        <Button size="small" onClick={() => openEdit(shift)}>
-                          {t('common.edit')}
-                        </Button>
-                        {shift.status === 'draft' && (
+            <TableContainer>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t('shifts.employee')}</TableCell>
+                    <TableCell>{t('shifts.startTime')}</TableCell>
+                    <TableCell>{t('shifts.endTime')}</TableCell>
+                    <TableCell>{t('common.status')}</TableCell>
+                    <TableCell>{t('common.actions')}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(branchShifts ?? []).map((shift) => (
+                    <TableRow key={shift.id}>
+                      <TableCell>
+                        {shift.employee_id
+                          ? (employeeNameById.get(shift.employee_id) ?? '—')
+                          : t('shifts.unassigned')}
+                      </TableCell>
+                      <TableCell>{new Date(shift.start_time).toLocaleString()}</TableCell>
+                      <TableCell>{new Date(shift.end_time).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={t(`shifts.status.${shift.status}`)}
+                          color={STATUS_COLOR[shift.status]}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Stack direction="row" spacing={1}>
                           <Button
                             size="small"
-                            color="success"
-                            onClick={() =>
-                              updateShift.mutate({ id: shift.id, input: { status: 'published' } })
-                            }
+                            startIcon={<EditIcon />}
+                            onClick={() => openEdit(shift)}
                           >
-                            {t('shifts.publish')}
+                            {t('common.edit')}
                           </Button>
-                        )}
-                        <Button size="small" color="error" onClick={() => deleteShift.mutate(shift.id)}>
-                          {t('shifts.delete')}
-                        </Button>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                          {shift.status === 'draft' && (
+                            <Button
+                              size="small"
+                              color="success"
+                              startIcon={<PublishIcon />}
+                              onClick={() =>
+                                updateShift.mutate({ id: shift.id, input: { status: 'published' } })
+                              }
+                            >
+                              {t('shifts.publish')}
+                            </Button>
+                          )}
+                          <Button
+                            size="small"
+                            color="error"
+                            startIcon={<DeleteIcon />}
+                            onClick={() => deleteShift.mutate(shift.id)}
+                          >
+                            {t('shifts.delete')}
+                          </Button>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           )}
         </Stack>
       )}
@@ -196,30 +236,32 @@ export function ShiftsPage() {
           {upcomingMyShifts.length === 0 ? (
             <Typography color="text.secondary">{t('shifts.noUpcomingShifts')}</Typography>
           ) : (
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t('shifts.startTime')}</TableCell>
-                  <TableCell>{t('shifts.endTime')}</TableCell>
-                  <TableCell>{t('common.status')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {upcomingMyShifts.map((shift) => (
-                  <TableRow key={shift.id}>
-                    <TableCell>{new Date(shift.start_time).toLocaleString()}</TableCell>
-                    <TableCell>{new Date(shift.end_time).toLocaleString()}</TableCell>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        label={t(`shifts.status.${shift.status}`)}
-                        color={STATUS_COLOR[shift.status]}
-                      />
-                    </TableCell>
+            <TableContainer>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t('shifts.startTime')}</TableCell>
+                    <TableCell>{t('shifts.endTime')}</TableCell>
+                    <TableCell>{t('common.status')}</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {upcomingMyShifts.map((shift) => (
+                    <TableRow key={shift.id}>
+                      <TableCell>{new Date(shift.start_time).toLocaleString()}</TableCell>
+                      <TableCell>{new Date(shift.end_time).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          label={t(`shifts.status.${shift.status}`)}
+                          color={STATUS_COLOR[shift.status]}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           )}
         </Stack>
       )}

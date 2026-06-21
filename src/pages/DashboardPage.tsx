@@ -22,7 +22,7 @@ export function DashboardPage() {
       {session && <Typography>{t('auth.loggedInAs', { email: session.user.email })}</Typography>}
       {profile && (
         <Typography>
-          {t('auth.role')}: {profile.role}
+          {t('auth.role')}: {t(`roles.${profile.role}`)}
         </Typography>
       )}
 

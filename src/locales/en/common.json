@@ -12,7 +12,9 @@
     "payroll": "Payroll",
     "documents": "Documents",
     "login": "Log in",
-    "logout": "Log out"
+    "logout": "Log out",
+    "menu": "Menu",
+    "toggleLanguage": "Switch language"
   },
   "auth": {
     "email": "Email",
@@ -23,12 +25,18 @@
     "loggedInAs": "Logged in as {{email}}",
     "role": "Role"
   },
+  "roles": {
+    "admin": "Admin",
+    "branch_manager": "Branch Manager",
+    "employee": "Employee"
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
     "create": "Create",
     "edit": "Edit",
     "deactivate": "Deactivate",
+    "delete": "Delete",
     "reactivate": "Reactivate",
     "active": "Active",
     "inactive": "Inactive",
@@ -110,6 +118,8 @@
   "shifts": {
     "title": "Shifts",
     "mySchedule": "My upcoming shifts",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
     "noUpcomingShifts": "No upcoming shifts.",
     "newShift": "New shift",
     "editShift": "Edit shift",

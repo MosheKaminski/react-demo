@@ -12,6 +12,8 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import DescriptionIcon from '@mui/icons-material/Description';
 import { useAuth } from '../lib/useAuth';
 import { useDeleteDocument, useDocuments, useUploadDocument } from '../features/documents/hooks';
 import { getDocumentSignedUrl } from '../features/documents/api';
@@ -53,7 +55,11 @@ export function EmployeeDocumentsSection({ employeeId }: EmployeeDocumentsSectio
             key={doc.id}
             disableGutters
             secondaryAction={
-              <IconButton edge="end" onClick={() => deleteDocument.mutate(doc)}>
+              <IconButton
+                edge="end"
+                aria-label={t('common.delete')}
+                onClick={() => deleteDocument.mutate(doc)}
+              >
                 <DeleteIcon fontSize="small" />
               </IconButton>
             }
@@ -69,9 +75,10 @@ export function EmployeeDocumentsSection({ employeeId }: EmployeeDocumentsSectio
           </ListItem>
         ))}
         {(documents ?? []).length === 0 && (
-          <Typography variant="body2" color="text.secondary">
-            {t('documents.none')}
-          </Typography>
+          <Stack spacing={1} sx={{ alignItems: 'center', py: 2, color: 'text.secondary' }}>
+            <DescriptionIcon />
+            <Typography variant="body2">{t('documents.none')}</Typography>
+          </Stack>
         )}
       </List>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
@@ -92,6 +99,7 @@ export function EmployeeDocumentsSection({ employeeId }: EmployeeDocumentsSectio
         <Button
           variant="outlined"
           component="label"
+          startIcon={<UploadFileIcon />}
           disabled={uploadDocument.isPending}
         >
           {t('documents.upload')}

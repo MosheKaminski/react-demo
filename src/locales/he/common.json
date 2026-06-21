@@ -12,7 +12,9 @@
     "payroll": "שכר",
     "documents": "מסמכים",
     "login": "התחברות",
-    "logout": "התנתקות"
+    "logout": "התנתקות",
+    "menu": "תפריט",
+    "toggleLanguage": "החלפת שפה"
   },
   "auth": {
     "email": "אימייל",
@@ -23,12 +25,18 @@
     "loggedInAs": "מחובר בשם {{email}}",
     "role": "תפקיד"
   },
+  "roles": {
+    "admin": "מנהל מערכת",
+    "branch_manager": "מנהל סניף",
+    "employee": "עובד"
+  },
   "common": {
     "save": "שמירה",
     "cancel": "ביטול",
     "create": "יצירה",
     "edit": "עריכה",
     "deactivate": "השבתה",
+    "delete": "מחיקה",
     "reactivate": "הפעלה מחדש",
     "active": "פעיל",
     "inactive": "לא פעיל",
@@ -110,6 +118,8 @@
   "shifts": {
     "title": "משמרות",
     "mySchedule": "המשמרות הקרובות שלי",
+    "previousWeek": "שבוע קודם",
+    "nextWeek": "שבוע הבא",
     "noUpcomingShifts": "אין משמרות קרובות.",
     "newShift": "משמרת חדשה",
     "editShift": "עריכת משמרת",

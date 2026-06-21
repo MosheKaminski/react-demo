@@ -155,7 +155,7 @@ function EmployeeFormFields({
               >
                 {ROLE_OPTIONS.map((role) => (
                   <MenuItem key={role} value={role}>
-                    {role}
+                    {t(`roles.${role}`)}
                   </MenuItem>
                 ))}
               </TextField>

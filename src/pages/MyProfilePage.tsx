@@ -4,6 +4,7 @@ import {
   Typography,
   CircularProgress,
   Paper,
+  TableContainer,
   Table,
   TableHead,
   TableRow,
@@ -11,6 +12,7 @@ import {
   TableBody,
   Button,
 } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
 import { useAuth } from '../lib/useAuth';
 import { useBranches } from '../features/branches/hooks';
 import { useEmployeeByUserId } from '../features/employees/hooks';
@@ -77,32 +79,40 @@ export function MyProfilePage() {
             {t('myProfile.noPaySummaries')}
           </Typography>
         ) : (
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>{t('payroll.month')}/{t('payroll.year')}</TableCell>
-                <TableCell>{t('payroll.grossTotal')}</TableCell>
-                <TableCell>{t('common.actions')}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {finalizedLines.map((line) => (
-                <TableRow key={line.id}>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
                   <TableCell>
-                    {line.payroll_runs.period_month}/{line.payroll_runs.period_year}
+                    {t('payroll.month')}/{t('payroll.year')}
                   </TableCell>
-                  <TableCell>{line.gross_total.toFixed(2)}</TableCell>
-                  <TableCell>
-                    {line.pdf_path && (
-                      <Button size="small" onClick={() => handleDownload(line.pdf_path!)}>
-                        {t('payroll.downloadPdf')}
-                      </Button>
-                    )}
-                  </TableCell>
+                  <TableCell>{t('payroll.grossTotal')}</TableCell>
+                  <TableCell>{t('common.actions')}</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {finalizedLines.map((line) => (
+                  <TableRow key={line.id}>
+                    <TableCell>
+                      {line.payroll_runs.period_month}/{line.payroll_runs.period_year}
+                    </TableCell>
+                    <TableCell>{line.gross_total.toFixed(2)}</TableCell>
+                    <TableCell>
+                      {line.pdf_path && (
+                        <Button
+                          size="small"
+                          startIcon={<DownloadIcon />}
+                          onClick={() => handleDownload(line.pdf_path!)}
+                        >
+                          {t('payroll.downloadPdf')}
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
         <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
           {t('payroll.disclaimer')}

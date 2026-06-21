@@ -144,17 +144,17 @@ Goal: actionable visibility for managers and admin.
 
 Goal: production-readiness pass.
 
-- [ ] Visual design pass — consistent icon set (`@mui/icons-material`, already installed) across nav/actions/empty states, refined color/typography theme, polished spacing across all screens built in Milestones 2–6
-- [ ] Full i18n audit — no hardcoded strings, verify Hebrew RTL layout on every screen
-- [ ] Responsive design pass (mobile clock-in flow is priority)
-- [ ] Empty states, loading states, and error handling audit across all pages
-- [ ] Accessibility pass (form labels, keyboard navigation, contrast)
-- [ ] Security review: re-verify RLS policies against the role matrix in PRD §2
-- [ ] Manual end-to-end test pass through all MVP user flows (Admin, Branch Manager, Employee)
-- [ ] Write a minimal README (setup, env vars, deploy instructions)
-- [ ] Commit: "Polish UI, complete i18n coverage, and finalize QA pass"
+- [x] Visual design pass — consistent icon set (`@mui/icons-material`) across nav/actions/empty states; refined theme (teal/amber palette, `borderRadius: 8`, sentence-case buttons instead of MUI's default all-caps, bold table headers); rebuilt `AppLayout` with a responsive hamburger-drawer nav (was a single row of 8 text buttons that visibly crowded/overlapped in English — fixed both the overflow and the underlying cause, the all-caps transform inflating English label width)
+- [x] Full i18n audit — grepped for hardcoded `aria-label`/JSX strings; found and fixed 2 hardcoded English `aria-label`s (week navigation) and 3 places displaying the raw `admin`/`branch_manager`/`employee` role string untranslated (added a `roles.*` i18n namespace). The PDF summary content is deliberately left in English regardless of UI language (an internal back-office document, not user-facing UI chrome) — documented as an intentional exception, not an oversight
+- [x] Responsive design pass (mobile clock-in flow is priority) — `AppLayout` now switches to a `Drawer` nav below the `md` breakpoint (RTL-aware anchor side); wrapped every data table in `TableContainer` so wide tables (the 10-column payroll table) scroll horizontally instead of breaking the page layout on narrow screens
+- [x] Empty states, loading states, and error handling audit across all pages — added icon+text empty states everywhere a list could legitimately be empty (branches, employees, shifts, attendance history/approvals, payroll past runs, documents); `CircularProgress` already covered loading states from earlier milestones; mutation errors already surface via `Alert` (payroll) or are simply prevented via RLS (everything else)
+- [x] Accessibility pass (form labels, keyboard navigation, contrast) — audited every `IconButton` for a missing `aria-label` (found and fixed one, on document delete); all form inputs already use MUI `label` props; kept MUI's default focus/keyboard handling (no custom widgets that would need manual key handling); verified the new theme palette against white backgrounds for contrast
+- [x] Security review: re-verify RLS policies against the role matrix in PRD §2 — re-read every migration's policies against the PRD §2 table; `npm run verify-rls` (23 checks) already exercises the full matrix end-to-end (not just read-the-SQL) for all three roles across every table with role-scoped access
+- [x] Manual end-to-end test pass through all MVP user flows (Admin, Branch Manager, Employee) — ran a consolidated Playwright pass hitting every route for every role post-polish (7 admin routes, 5 branch_manager routes, 4 employee routes) — all load with real content and zero console errors
+- [x] Write a minimal README (setup, env vars, deploy instructions) — replaced the leftover Vite template README with real setup/env var/script/deploy docs
+- [x] Commit: "Polish UI, complete i18n coverage, and finalize QA pass"
 
-**Exit criteria:** All PRD §4 functional requirements demonstrably work end-to-end; no untranslated strings; RLS verified against the full role matrix.
+**Exit criteria:** All PRD §4 functional requirements demonstrably work end-to-end; no untranslated strings; RLS verified against the full role matrix. ✅ All of the above verified via Playwright (mobile clock-in flow, desktop nav with icons in both languages, RTL drawer) and `npm run verify-rls` (23/23).
 
 ---
 
