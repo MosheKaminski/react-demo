@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Box,
   Stack,
   Typography,
   TextField,
@@ -162,7 +163,14 @@ export function EmployeeSalarySection({ employeeId }: EmployeeSalarySectionProps
         ))}
       </List>
       {canAddAdjustment && (
-        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+            gap: 1,
+            alignItems: 'center',
+          }}
+        >
           <TextField
             select
             size="small"
@@ -204,7 +212,7 @@ export function EmployeeSalarySection({ employeeId }: EmployeeSalarySectionProps
           >
             {t('common.create')}
           </Button>
-        </Stack>
+        </Box>
       )}
     </Stack>
   );

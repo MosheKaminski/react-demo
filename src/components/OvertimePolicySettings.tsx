@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Stack, Typography, TextField, Button, Paper, CircularProgress } from '@mui/material';
+import { Box, Stack, Typography, TextField, Button, Paper, CircularProgress } from '@mui/material';
 import { useOvertimePolicy, useUpdateOvertimePolicy } from '../features/payroll/hooks';
 import type { OvertimePolicy } from '../types/domain';
 
@@ -12,9 +12,7 @@ function OvertimePolicyForm({ policy }: { policy: OvertimePolicy }) {
   const [daily125Hours, setDaily125Hours] = useState(String(policy.daily_125_hours));
   const [rate125, setRate125] = useState(String(policy.rate_125));
   const [rate150, setRate150] = useState(String(policy.rate_150));
-  const [weekendHolidayRate, setWeekendHolidayRate] = useState(
-    String(policy.weekend_holiday_rate),
-  );
+  const [weekendHolidayRate, setWeekendHolidayRate] = useState(String(policy.weekend_holiday_rate));
 
   const handleSave = () => {
     updatePolicy.mutate({
@@ -32,7 +30,13 @@ function OvertimePolicyForm({ policy }: { policy: OvertimePolicy }) {
   return (
     <Stack spacing={2}>
       <Typography variant="subtitle1">{t('payroll.overtimePolicy')}</Typography>
-      <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap' }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+          gap: 2,
+        }}
+      >
         <TextField
           label={t('payroll.dailyRegularHours')}
           type="number"
@@ -68,7 +72,7 @@ function OvertimePolicyForm({ policy }: { policy: OvertimePolicy }) {
           value={weekendHolidayRate}
           onChange={(e) => setWeekendHolidayRate(e.target.value)}
         />
-      </Stack>
+      </Box>
       <Button
         variant="outlined"
         onClick={handleSave}

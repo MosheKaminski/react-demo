@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import {
+  Box,
   Stack,
   Typography,
   TextField,
@@ -113,7 +114,14 @@ export function PayrollPage() {
       <OvertimePolicySettings />
 
       <Stack spacing={2}>
-        <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, max-content))',
+            gap: 2,
+            alignItems: 'center',
+          }}
+        >
           <TextField
             label={t('payroll.year')}
             type="number"
@@ -159,7 +167,7 @@ export function PayrollPage() {
           >
             {t('payroll.runPayroll')}
           </Button>
-        </Stack>
+        </Box>
 
         {runPayroll.isError && (
           <Alert severity="error">{(runPayroll.error as Error).message}</Alert>
