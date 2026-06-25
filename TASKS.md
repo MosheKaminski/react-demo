@@ -180,7 +180,15 @@ Goal: production-readiness pass.
 - [x] `ProtectedRoute` now redirects to `/set-password` whenever `passwordRecovery` is true, instead of rendering the requested page, so the user can't skip this step
 - [x] `invite-employee` now accepts and forwards a `redirectTo` (the frontend passes `${origin}/set-password`) instead of relying on the Auth default redirect, and the allow-list in `additional_redirect_urls` was switched to wildcard patterns (`/**`) so any path under the app's origin is permitted — likely the actual root cause, since the previous exact-match entries probably didn't match whatever path Supabase's invite link appended
 
-**Verified:** build/lint/test/verify-rls all green. Sent a second real test invite with the new `redirectTo`; cleanup script removed the test employee/account afterward. *(Final end-to-end confirmation — does the email link now actually land on the Set Password screen — pending the user clicking it.)*
+**Verified:** build/lint/test/verify-rls all green. Sent a second real test invite with the new `redirectTo`; cleanup script removed the test employee/account afterward.
+
+### Follow-up fix #2 — clicking the link gave a Vercel 404, not the app
+
+**Bug found by the user:** clicking the (correctly-redirecting) invite link returned a Vercel `404: NOT_FOUND` page instead of the app. Root cause: this is a single-page app with client-side routing (`BrowserRouter`), but Vercel had no rewrite rule telling it to serve `index.html` for paths that aren't real static files. `/set-password` doesn't exist on disk — only `index.html` + JS bundles do — so a *direct/hard navigation* to any deep route (not just `/set-password`; confirmed `/employees` 404'd too) failed. This never surfaced in any earlier Playwright pass because every test navigated via in-app client-side links from `/`, never via a hard browser navigation straight to a deep URL.
+
+- [x] Added `vercel.json` with a catch-all rewrite (`"/(.*)" → "/index.html"`) so any path with no matching static file falls back to the SPA shell and lets React Router take over. Vercel checks for real static files (JS/CSS/images) *before* applying rewrites, so this doesn't break asset loading.
+
+**Verified:** confirmed both `/employees` and `/set-password` returned `404` before the fix via direct `curl` requests (proving it wasn't invite-link-specific), then redeployed and re-confirmed `200` after.
 
 ---
 
