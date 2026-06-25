@@ -5,10 +5,13 @@ payroll (with Israeli-labor-law overtime calculation) for a small/medium
 business. See [PRD.md](PRD.md) for the full product spec and [TASKS.md](TASKS.md)
 for the milestone-by-milestone build log.
 
+**Live app:** https://react-demo-beta-eight.vercel.app
+(see [Test accounts](#test-accounts-dev-project-after-npm-run-seed) below to log in)
+
 ## Stack
 
 - **Frontend:** React + Vite + TypeScript, MUI (with RTL support), i18next (Hebrew/English), TanStack Query
-- **Backend:** Supabase — PostgreSQL with Row Level Security, Auth, Storage, and one Edge Function (`calculate-payroll`)
+- **Backend:** Supabase — PostgreSQL with Row Level Security, Auth, Storage, and two Edge Functions (`calculate-payroll`, `invite-employee`)
 - **Hosting:** Vercel (frontend), Supabase (backend), both auto-deploying from `master`
 
 ## Local setup
@@ -59,21 +62,25 @@ Supabase dev project instead.
 
 ## Edge Functions
 
-The payroll calculation runs server-side in `supabase/functions/calculate-payroll`.
+Two server-side functions, both admin-only (each checks the caller's role via
+their own JWT before using the service-role key for privileged work):
+
+| Function | Does |
+|---|---|
+| `calculate-payroll` | Aggregates approved attendance into regular/overtime hours and combines them with salary profiles + adjustments into payroll lines. The pure calculation logic (`payroll-logic.ts`) has zero Deno/Node-specific imports, so the same file is both deployed here and unit-tested directly from Node (`npm run test`) — no duplication. |
+| `invite-employee` | Creates a Supabase Auth account for an employee (via `auth.admin.inviteUserByEmail`) and links it to `employees.user_id`. This is the only way to onboard a new login account — there's no open self-registration. |
+
 Deploy changes with:
 
 ```bash
 npx supabase functions deploy calculate-payroll
+npx supabase functions deploy invite-employee
 ```
-
-The pure calculation logic (`payroll-logic.ts`) has zero Deno/Node-specific
-imports, so the same file is both deployed to the Edge Function and
-unit-tested directly from Node (`npm run test`) — no duplication.
 
 ## Deployment
 
-- **Frontend:** pushing to `master` auto-deploys to Vercel (already connected). Production environment variables are set in the Vercel project settings, not in this repo.
-- **Backend:** migrations and Edge Function deploys are manual (`supabase db push` / `supabase functions deploy`) — there's no CI step for these yet; see TASKS.md Backlog.
+- **Frontend:** pushing to `master` auto-deploys to Vercel (already connected) at the Live app URL above. Production environment variables are set in the Vercel project settings, not in this repo. `vercel.json` adds a catch-all SPA rewrite (`/(.*) → /index.html`) — without it, any direct/hard navigation to a deep route (e.g. an emailed invite link landing on `/set-password`) 404s, since Vercel otherwise only serves real static files.
+- **Backend:** migrations and Edge Function deploys are manual (`supabase db push` / `supabase functions deploy`) — there's no CI step for these yet; see TASKS.md Backlog. Auth settings (site URL, redirect URL allow-list) are pushed with `npx supabase config push`. Note: `supabase/config.toml`'s `site_url`/`additional_redirect_urls` are hardcoded to the Live app URL above — update them (then `config push`) if you deploy to a different URL, or invite/password-reset email links won't redirect anywhere valid.
 
 ## Test accounts (dev project, after `npm run seed`)
 
