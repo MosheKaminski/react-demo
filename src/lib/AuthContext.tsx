@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [passwordRecovery, setPasswordRecovery] = useState(false);
   const lastUserId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -44,9 +45,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    // Both invite and password-reset links land here via this event - the
+    // session is real, but the user hasn't set a password yet, so the app
+    // must route them to /set-password instead of treating it as a normal
+    // logged-in session.
+    const { data: subscription } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       handleUserChange(newSession?.user.id ?? null);
+      if (event === 'PASSWORD_RECOVERY') {
+        setPasswordRecovery(true);
+      }
       if (newSession) {
         fetchProfile(newSession.user.id).then((p) => active && setProfile(p));
       } else {
@@ -70,7 +78,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ session, profile, loading, signInWithPassword, signOut }}>
+    <AuthContext.Provider
+      value={{
+        session,
+        profile,
+        loading,
+        passwordRecovery,
+        clearPasswordRecovery: () => setPasswordRecovery(false),
+        signInWithPassword,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

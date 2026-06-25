@@ -7,7 +7,7 @@
 // (auth.admin.inviteUserByEmail), which must never be exposed to the
 // browser - hence this runs server-side.
 //
-// Request body: { employeeId: string }
+// Request body: { employeeId: string, redirectTo?: string }
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const corsHeaders = {
@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'Only admins can invite users' }, 403);
     }
 
-    const { employeeId } = await req.json();
+    const { employeeId, redirectTo } = await req.json();
     if (!employeeId) {
       return jsonResponse({ error: 'employeeId is required' }, 400);
     }
@@ -73,7 +73,10 @@ Deno.serve(async (req) => {
 
     const { data: invited, error: inviteError } = await db.auth.admin.inviteUserByEmail(
       employee.email,
-      { data: { full_name: employee.full_name } },
+      {
+        data: { full_name: employee.full_name },
+        redirectTo: typeof redirectTo === 'string' ? redirectTo : undefined,
+      },
     );
     if (inviteError) {
       return jsonResponse({ error: inviteError.message }, 400);

@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { session, profile, loading } = useAuth();
+  const { session, profile, loading, passwordRecovery } = useAuth();
 
   if (loading) {
     return (
@@ -22,6 +22,12 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 
   if (!session) {
     return <Navigate to="/login" replace />;
+  }
+
+  // An invite/password-reset link produces a real session, but the user
+  // hasn't set a password yet - force them through that step first.
+  if (passwordRecovery) {
+    return <Navigate to="/set-password" replace />;
   }
 
   if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {

@@ -116,7 +116,7 @@ export async function listAllProfiles(): Promise<{ id: string; role: Role }[]> {
  * them an invite link to set their own password. */
 export async function inviteEmployee(employeeId: string): Promise<{ userId: string }> {
   const { data, error } = await supabase.functions.invoke('invite-employee', {
-    body: { employeeId },
+    body: { employeeId, redirectTo: `${window.location.origin}/set-password` },
   });
   if (error) throw error;
   if (data?.error) throw new Error(data.error);

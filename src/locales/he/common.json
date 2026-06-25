@@ -23,7 +23,14 @@
     "signingIn": "מתחבר...",
     "invalidCredentials": "אימייל או סיסמה שגויים.",
     "loggedInAs": "מחובר בשם {{email}}",
-    "role": "תפקיד"
+    "role": "תפקיד",
+    "setPasswordTitle": "קביעת סיסמה",
+    "setPasswordSubtitle": "ברוך הבא! בחר סיסמה כדי לסיים את הקמת החשבון שלך.",
+    "newPassword": "סיסמה חדשה",
+    "confirmPassword": "אימות סיסמה",
+    "savePassword": "שמירת סיסמה",
+    "savingPassword": "שומר...",
+    "passwordsDontMatch": "הסיסמאות אינן תואמות."
   },
   "roles": {
     "admin": "מנהל מערכת",

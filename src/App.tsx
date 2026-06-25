@@ -12,6 +12,7 @@ import { AuthProvider } from './lib/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/AppLayout';
 import { LoginPage } from './pages/LoginPage';
+import { SetPasswordPage } from './pages/SetPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { BranchesPage } from './pages/BranchesPage';
 import { EmployeesPage } from './pages/EmployeesPage';
@@ -48,6 +49,7 @@ function App() {
             <AuthProvider>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/set-password" element={<SetPasswordPage />} />
                 <Route
                   path="/"
                   element={

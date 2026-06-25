@@ -23,7 +23,14 @@
     "signingIn": "Signing in...",
     "invalidCredentials": "Invalid email or password.",
     "loggedInAs": "Logged in as {{email}}",
-    "role": "Role"
+    "role": "Role",
+    "setPasswordTitle": "Set your password",
+    "setPasswordSubtitle": "Welcome! Choose a password to finish setting up your account.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "savePassword": "Save password",
+    "savingPassword": "Saving...",
+    "passwordsDontMatch": "Passwords don't match."
   },
   "roles": {
     "admin": "Admin",

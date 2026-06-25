@@ -171,6 +171,17 @@ Goal: production-readiness pass.
 
 **Verified:** RLS/build/lint/test suite all green after the change. The invite call itself was tested twice — first with `@react-demo.local`/`example.com` test emails, which Supabase Auth correctly rejected (it validates deliverability, not just format) — then with a real mailbox, which succeeded: the Edge Function returned `200`, `employees.user_id` was correctly linked, and the trigger-created profile defaulted to `role = 'employee'` as expected. Test employee/auth user cleaned up afterward.
 
+### Follow-up fix — invite link landed on regular login instead of setting a password
+
+**Bug found by the user after testing the real invite email:** clicking the invite link led to the normal login page instead of a "set your password" screen — and even if a session *had* been silently established, there was no page in the app that let the user actually choose a password, so they'd be stuck unable to ever log in normally again.
+
+- [x] Added `passwordRecovery` state to `AuthContext`, set when Supabase fires the `PASSWORD_RECOVERY` auth event (which both invite and password-reset links trigger)
+- [x] New `/set-password` page — calls `supabase.auth.updateUser({ password })` using the temporary session from the invite link, then clears the recovery flag
+- [x] `ProtectedRoute` now redirects to `/set-password` whenever `passwordRecovery` is true, instead of rendering the requested page, so the user can't skip this step
+- [x] `invite-employee` now accepts and forwards a `redirectTo` (the frontend passes `${origin}/set-password`) instead of relying on the Auth default redirect, and the allow-list in `additional_redirect_urls` was switched to wildcard patterns (`/**`) so any path under the app's origin is permitted — likely the actual root cause, since the previous exact-match entries probably didn't match whatever path Supabase's invite link appended
+
+**Verified:** build/lint/test/verify-rls all green. Sent a second real test invite with the new `redirectTo`; cleanup script removed the test employee/account afterward. *(Final end-to-end confirmation — does the email link now actually land on the Set Password screen — pending the user clicking it.)*
+
 ---
 
 ## Milestone 8 — MVP Launch
