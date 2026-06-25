@@ -89,3 +89,11 @@ export function useProfileRole(userId: string | null | undefined) {
 export function useAllProfiles() {
   return useQuery({ queryKey: ['all-profiles'] as const, queryFn: api.listAllProfiles });
 }
+
+export function useInviteEmployee() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (employeeId: string) => api.inviteEmployee(employeeId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['employees'] }),
+  });
+}

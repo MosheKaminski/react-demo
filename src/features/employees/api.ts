@@ -111,3 +111,14 @@ export async function listAllProfiles(): Promise<{ id: string; role: Role }[]> {
   if (error) throw error;
   return data as { id: string; role: Role }[];
 }
+
+/** Admin-only: creates a Supabase Auth account for this employee and emails
+ * them an invite link to set their own password. */
+export async function inviteEmployee(employeeId: string): Promise<{ userId: string }> {
+  const { data, error } = await supabase.functions.invoke('invite-employee', {
+    body: { employeeId },
+  });
+  if (error) throw error;
+  if (data?.error) throw new Error(data.error);
+  return data as { userId: string };
+}

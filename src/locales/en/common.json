@@ -77,7 +77,10 @@
     "addBranch": "Add branch",
     "remove": "Remove",
     "profileRole": "Account role",
-    "noLinkedAccount": "No linked login account yet"
+    "noLinkedAccount": "No linked login account yet",
+    "inviteToSystem": "Invite to system",
+    "inviteRequiresEmail": "Add an email address above (and save) before inviting.",
+    "inviteSent": "Invitation email sent to {{email}}."
   },
   "myProfile": {
     "title": "My profile",

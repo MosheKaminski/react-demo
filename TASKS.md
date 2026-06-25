@@ -55,7 +55,7 @@ Goal: Admin/Branch Manager can manage branches and employees through the UI.
 - [x] Branch list page (Admin) — table with create/edit/deactivate
 - [x] Branch create/edit form (name, address, phone, manager assignment)
 - [x] Employee list page — filterable by branch, role, active status
-- [x] Employee create/edit form (personal info, start/end date, role, primary branch) — role is shown/editable only once the employee has a linked login account (`profiles.role`); creating a login account is a future "invite" feature, out of scope for this milestone
+- [x] Employee create/edit form (personal info, start/end date, role, primary branch) — role is shown/editable only once the employee has a linked login account (`profiles.role`); creating that login account is the **"Invite to system"** flow added post-MVP-Milestone-7 (see note below) — out of scope when this milestone was originally built
 - [x] Multi-branch assignment UI (`EmployeeBranchAssignment`) — assign employee to additional branches
 - [x] Employee self-service profile page (read-only personal info + pay summary placeholder)
 - [x] Soft-deactivation flow (set `end_date`, hide from active lists, retain historical data) — also supports reactivation
@@ -158,6 +158,21 @@ Goal: production-readiness pass.
 
 ---
 
+## Post-Milestone-7 fix — User invitation flow
+
+**Gap found by the user after Milestone 7:** there was no way to actually add a *new login account* to the system. Creating an employee (Milestone 2) only creates the HR record — `employees.user_id` stayed `null` until someone manually linked it. There was no signup page and no password field anywhere, so admins had no way to onboard a real user.
+
+- [x] `invite-employee` Edge Function (admin-only, same JWT-check pattern as `calculate-payroll`) — calls `auth.admin.inviteUserByEmail` with the service-role key (must never reach the browser) and links the new `auth.users.id` to `employees.user_id`. The existing `handle_new_user` trigger still applies, defaulting the new account to the `employee` role.
+- [x] "Invite to system" button in the employee edit dialog (admin-only; disabled until the employee has a saved email address)
+- [x] Updated Supabase Auth `site_url` / `additional_redirect_urls` (via `supabase config push`) to point at the real Vercel deployment instead of the scaffolded `localhost:3000` default, so invite links actually redirect somewhere real
+- [x] Decided **against** open self-registration and Google OAuth for now (would need a Google Cloud OAuth client the user would have to set up) — admin-invite-by-email is the only onboarding path; both are tracked in the Backlog below if wanted later
+
+**Known side effect:** pushing the full local `supabase/config.toml` also reset a few other remote Auth defaults that had drifted from the checked-in file (notably `enable_confirmations: true → false` for email signups, and MFA enrollment flags). Acceptable for this MVP/dev project — flagged here so it's not a surprise later.
+
+**Verified:** RLS/build/lint/test suite all green after the change. The invite call itself was tested twice — first with `@react-demo.local`/`example.com` test emails, which Supabase Auth correctly rejected (it validates deliverability, not just format) — then with a real mailbox, which succeeded: the Edge Function returned `200`, `employees.user_id` was correctly linked, and the trigger-created profile defaulted to `role = 'employee'` as expected. Test employee/auth user cleaned up afterward.
+
+---
+
 ## Milestone 8 — MVP Launch
 
 - [ ] Final production Supabase project setup (separate from dev) with migrations applied
@@ -177,3 +192,5 @@ Goal: production-readiness pass.
 - [ ] PWA / push notifications
 - [ ] Auto-suggested shift scheduling
 - [ ] Split-shift cost allocation reporting for multi-branch employees
+- [ ] Google sign-in (OAuth) as an alternative to email/password — needs a Google Cloud OAuth client (Client ID/Secret) the user sets up, then enabling the provider in Supabase Auth
+- [ ] Open self-registration (vs. admin-invite-only) — would need a signup page; the `handle_new_user` trigger already defaults new accounts to the `employee` role, so the main missing piece is the UI and a decision on whether self-registered accounts should require admin approval before being linked to an employee record

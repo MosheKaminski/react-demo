@@ -11,8 +11,11 @@ import {
   MenuItem,
   Divider,
   Typography,
+  Alert,
 } from '@mui/material';
-import { useProfileRole, useUpdateProfileRole } from '../features/employees/hooks';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { useAuth } from '../lib/useAuth';
+import { useInviteEmployee, useProfileRole, useUpdateProfileRole } from '../features/employees/hooks';
 import { EmployeeBranchAssignments } from './EmployeeBranchAssignments';
 import { EmployeeSalarySection } from './EmployeeSalarySection';
 import { EmployeeDocumentsSection } from './EmployeeDocumentsSection';
@@ -47,8 +50,10 @@ function EmployeeFormFields({
   const [endDate, setEndDate] = useState(employee?.end_date ?? '');
   const [primaryBranchId, setPrimaryBranchId] = useState(employee?.primary_branch_id ?? '');
 
+  const { profile } = useAuth();
   const { data: profileRole } = useProfileRole(employee?.user_id);
   const updateProfileRole = useUpdateProfileRole();
+  const inviteEmployee = useInviteEmployee();
 
   const handleSubmit = () => {
     onSubmit({
@@ -162,9 +167,37 @@ function EmployeeFormFields({
             </>
           )}
           {employee && !employee.user_id && (
-            <Typography variant="body2" color="text.secondary">
-              {t('employees.noLinkedAccount')}
-            </Typography>
+            <>
+              <Divider />
+              <Typography variant="body2" color="text.secondary">
+                {t('employees.noLinkedAccount')}
+              </Typography>
+              {profile?.role === 'admin' && (
+                <Stack spacing={1} sx={{ alignItems: 'flex-start' }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<PersonAddIcon />}
+                    disabled={!employee.email || inviteEmployee.isPending}
+                    onClick={() => inviteEmployee.mutate(employee.id)}
+                  >
+                    {t('employees.inviteToSystem')}
+                  </Button>
+                  {!employee.email && (
+                    <Typography variant="caption" color="text.secondary">
+                      {t('employees.inviteRequiresEmail')}
+                    </Typography>
+                  )}
+                  {inviteEmployee.isSuccess && (
+                    <Alert severity="success">
+                      {t('employees.inviteSent', { email: employee.email })}
+                    </Alert>
+                  )}
+                  {inviteEmployee.isError && (
+                    <Alert severity="error">{(inviteEmployee.error as Error).message}</Alert>
+                  )}
+                </Stack>
+              )}
+            </>
           )}
         </Stack>
       </DialogContent>

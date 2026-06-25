@@ -77,7 +77,10 @@
     "addBranch": "הוספת סניף",
     "remove": "הסרה",
     "profileRole": "תפקיד בחשבון",
-    "noLinkedAccount": "אין עדיין חשבון התחברות מקושר"
+    "noLinkedAccount": "אין עדיין חשבון התחברות מקושר",
+    "inviteToSystem": "הזמנה למערכת",
+    "inviteRequiresEmail": "הוסף כתובת אימייל מעלה (ושמור) לפני ההזמנה.",
+    "inviteSent": "מייל הזמנה נשלח אל {{email}}."
   },
   "myProfile": {
     "title": "הפרופיל שלי",
