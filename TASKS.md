@@ -188,7 +188,7 @@ Goal: production-readiness pass.
 
 - [x] Added `vercel.json` with a catch-all rewrite (`"/(.*)" → "/index.html"`) so any path with no matching static file falls back to the SPA shell and lets React Router take over. Vercel checks for real static files (JS/CSS/images) *before* applying rewrites, so this doesn't break asset loading.
 
-**Verified:** confirmed both `/employees` and `/set-password` returned `404` before the fix via direct `curl` requests (proving it wasn't invite-link-specific), then redeployed and re-confirmed `200` after.
+**Verified:** confirmed both `/employees` and `/set-password` returned `404` before the fix via direct `curl` requests (proving it wasn't invite-link-specific); redeployed and confirmed `200` on `/`, `/employees`, and `/set-password`, plus the JS bundle still loading correctly (the rewrite doesn't shadow real static assets).
 
 ---
 
